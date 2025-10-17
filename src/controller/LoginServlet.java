@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("mypage.jsp");
             } else {
                 request.setAttribute("errorMessage", "ユーザーIDまたはパスワードが正しくありません。");
-                RequestDispatcher rd = request.getRequestDispatcher("controller/login.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("views/login.jsp");
                 rd.forward(request, response);
             }
         } catch (Exception e) {
