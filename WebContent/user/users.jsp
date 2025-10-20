@@ -22,7 +22,6 @@
             </tr>
         <%
                 }
-                rs.beforeFirst(); // reset resultset (tùy trường hợp)
             } else {
         %>
             <tr><td colspan="4">No data found</td></tr>
@@ -32,3 +31,5 @@
     </table>
 </body>
 </html>
+ 
+ 
