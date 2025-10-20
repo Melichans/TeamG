@@ -1,11 +1,13 @@
 package bean;
 
+import java.sql.Timestamp;
+
 public class AccountBean {
     private int accountId;
     private String username;
-    private String password;
-    private String role; // Admin / User
-    private int userId; // Liên kết với user_id
+    private String password; // Mật khẩu mã hóa
+    private int roleId; // Liên kết với role_id
+    private Timestamp createdAt;
 
     public int getAccountId() { return accountId; }
     public void setAccountId(int accountId) { this.accountId = accountId; }
@@ -16,9 +18,9 @@ public class AccountBean {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public int getRoleId() { return roleId; }
+    public void setRoleId(int roleId) { this.roleId = roleId; }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }

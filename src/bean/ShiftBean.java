@@ -1,15 +1,19 @@
 package bean;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class ShiftBean {
     private int shiftId;
     private int userId;
+    private int deptId;
     private Date shiftDate;
-    private String startTime;
-    private String endTime;
-    private boolean confirmed; // 確認済みフラグ
-    private boolean submitted; // 提出済みフラグ
+    private Time startTime;
+    private Time endTime;
+    private String status;
+    private Timestamp createdAt;
+    private Integer approvedBy;
 
     public int getShiftId() { return shiftId; }
     public void setShiftId(int shiftId) { this.shiftId = shiftId; }
@@ -17,18 +21,24 @@ public class ShiftBean {
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
 
+    public int getDeptId() { return deptId; }
+    public void setDeptId(int deptId) { this.deptId = deptId; }
+
     public Date getShiftDate() { return shiftDate; }
     public void setShiftDate(Date shiftDate) { this.shiftDate = shiftDate; }
 
-    public String getStartTime() { return startTime; }
-    public void setStartTime(String startTime) { this.startTime = startTime; }
+    public Time getStartTime() { return startTime; }
+    public void setStartTime(Time startTime) { this.startTime = startTime; }
 
-    public String getEndTime() { return endTime; }
-    public void setEndTime(String endTime) { this.endTime = endTime; }
+    public Time getEndTime() { return endTime; }
+    public void setEndTime(Time endTime) { this.endTime = endTime; }
 
-    public boolean isConfirmed() { return confirmed; }
-    public void setConfirmed(boolean confirmed) { this.confirmed = confirmed; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public boolean isSubmitted() { return submitted; }
-    public void setSubmitted(boolean submitted) { this.submitted = submitted; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public Integer getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(Integer approvedBy) { this.approvedBy = approvedBy; }
 }

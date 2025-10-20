@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <title>SSAI ログイン</title>
     <style>
-        body { font-family: 'Yu Gothic', sans-serif; text-align: center; margin-top: 60px; }
+        body { font-family: 'Yu Gothic', sa
+        ns-serif; text-align: center; margin-top: 60px; }
         input { display: block; margin: 10px auto; padding: 8px; width: 200px; border: 1px solid #000; }
         .forgot { text-align: right; width: 230px; margin: auto; }
         .forgot a { font-size: 12px; color: #00f; text-decoration: none; }

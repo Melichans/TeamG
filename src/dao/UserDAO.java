@@ -1,4 +1,3 @@
-
 package dao;
 
 import java.sql.Connection;
@@ -15,31 +14,37 @@ public class UserDAO {
         this.conn = conn;
     }
 
-    public UserBean login(String companyCode, String username, String password) throws SQLException {
-    	String sql = "SELECT * FROM account a "
-    	           + "JOIN user u ON a.id = u.account_id "
-    	           + "WHERE a.company_name = ? AND a.login_id = ? AND a.password = ?";
-
+    public UserBean getUserByCredentials(String companyCode, String username) throws SQLException {
+        UserBean user = null;
+        String sql = "SELECT u.user_id, u.account_id, u.company_id, c.company_code, c.company_name, " +
+                     "u.name, u.gender, u.position, u.phone, u.email, u.joined_date " +
+                     "FROM user u " +
+                     "JOIN account a ON u.account_id = a.account_id " +
+                     "JOIN company c ON u.company_id = c.company_id " +
+                     "WHERE c.company_code = ? AND a.username = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, companyCode);
             ps.setString(2, username);
-            ps.setString(3, password);
-
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                UserBean user = new UserBean();
-                user.setId(rs.getInt("id"));
+                user = new UserBean();
+                user.setUserId(rs.getInt("user_id"));
+                user.setAccountId(rs.getInt("account_id"));
                 user.setCompanyId(rs.getInt("company_id"));
                 user.setCompanyCode(rs.getString("company_code"));
                 user.setCompanyName(rs.getString("company_name"));
-                user.setUsername(rs.getString("username"));
                 user.setName(rs.getString("name"));
+                user.setGender(rs.getString("gender"));
                 user.setPosition(rs.getString("position"));
-                user.setRole(rs.getString("role"));
-                return user;
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setJoinedDate(rs.getDate("joined_date"));
             }
+        } catch (SQLException e) {
+            throw new SQLException("Lỗi lấy thông tin người dùng: " + e.getMessage(), e);
         }
-        return null;
+        return user;
     }
 }
