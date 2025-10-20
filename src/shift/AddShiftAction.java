@@ -1,5 +1,8 @@
+package shift;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +14,7 @@ import bean.ShiftBean;
 import dao.ShiftDAO;
 import util.DBConnection;
 
-@WebServlet("/addShift")
+@WebServlet("shift/addShift")
 public class AddShiftAction extends HttpServlet {
     private ShiftDAO shiftDAO;
 
@@ -33,9 +36,9 @@ public class AddShiftAction extends HttpServlet {
             shift.setStatus("未提出");
             shift.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             shiftDAO.addShift(shift);
-            response.sendRedirect("shift_list.jsp");
+            response.sendRedirect("shift/shift_list.jsp");
         } catch (SQLException e) {
-            throw new ServletException("Lỗi thêm ca", e);
+            throw new ServletException("error", e);
         }
     }
 }

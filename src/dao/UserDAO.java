@@ -43,7 +43,7 @@ public class UserDAO {
                 user.setJoinedDate(rs.getDate("joined_date"));
             }
         } catch (SQLException e) {
-            throw new SQLException("Lỗi lấy thông tin người dùng: " + e.getMessage(), e);
+            throw new SQLException("error: " + e.getMessage(), e);
         }
         return user;
     }
