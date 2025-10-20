@@ -22,52 +22,39 @@ import util.DBConnection;
 
 @WebServlet("/loginlogout/loginExecute")
 public class LoginExecuteAction extends HttpServlet {
-    private AccountDAO accountDAO;
-    private UserDAO userDAO;
-
-    @Override
-    public void init() throws ServletException {
-        accountDAO = new AccountDAO();
-        userDAO = new UserDAO(DBConnection.getConnection());
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Set character encoding để hỗ trợ tiếng Nhật
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        
+
         String companyCode = request.getParameter("companyCode");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
         try {
-            // 1. Kiểm tra đăng nhập bằng AccountDAO (bao gồm username + password)
+            // Kiểm tra đăng nhập bằng AccountDAO
+            AccountDAO accountDAO = new AccountDAO();
             AccountBean account = accountDAO.login(username, password);
             if (account != null) {
-                // 2. Lấy thông tin người dùng với companyCode
+                // Lấy thông tin người dùng
+                UserDAO userDAO = new UserDAO(DBConnection.getConnection());
                 UserBean user = userDAO.getUserByCredentials(companyCode, username);
                 if (user != null) {
-                    // 3. Lấy role_name từ role_id
+                    // Lấy role_name từ role_id
                     String roleName = getRoleName(account.getRoleId());
-                    
-                    // 4. Lưu vào session
+
                     HttpSession session = request.getSession();
                     session.setAttribute("account", account);
                     session.setAttribute("user", user);
-                    session.setAttribute("role", roleName);
 
-                    // 5. Chuyển hướng dựa trên role
-                    switch (roleName) {
-                        case "ADMIN":
-                            response.sendRedirect(request.getContextPath() + "/admin_home.jsp");
-                            break;
-                        case "USER":
-                            response.sendRedirect(request.getContextPath() + "/user_home.jsp");
+                    // Chuyển hướng dựa trên role
+                    switch (roleName.toLowerCase()) {
+                        case "admin":
+                            response.sendRedirect("admin_home.jsp");
                             break;
                         default:
-                            response.sendRedirect(request.getContextPath() + "/user_home.jsp");
+                            response.sendRedirect("user_home.jsp");
                             break;
                     }
                 } else {
@@ -82,22 +69,21 @@ public class LoginExecuteAction extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "システムエラーが発生しました。");
-            RequestDispatcher rd = request.getRequestDispatcher("/loginlogout/login.jsp");
-            rd.forward(request, response);
+            throw new ServletException(e);
         }
     }
 
     private String getRoleName(int roleId) throws SQLException {
+        String roleName = "USER";
         String sql = "SELECT role_name FROM role WHERE role_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, roleId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getString("role_name");
+                roleName = rs.getString("role_name");
             }
-            return "USER"; // Mặc định
         }
+        return roleName;
     }
 }
