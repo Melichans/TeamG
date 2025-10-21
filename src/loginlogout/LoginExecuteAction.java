@@ -51,10 +51,10 @@ public class LoginExecuteAction extends HttpServlet {
                     // Chuyển hướng dựa trên role
                     switch (roleName.toLowerCase()) {
                         case "admin":
-                            response.sendRedirect("admin_home.jsp");
+                        	response.sendRedirect(request.getContextPath() + "/home/admin_home.jsp");
                             break;
                         default:
-                            response.sendRedirect("user_home.jsp");
+                        	response.sendRedirect(request.getContextPath() + "/home/user_home.jsp");
                             break;
                     }
                 } else {
