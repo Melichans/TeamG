@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 public class AccountBean {
     private int accountId;
     private String username;
-    private String password; // Mật khẩu mã hóa
-    private int roleId; // Liên kết với role_id
+    private String password; // 暗号化されたパスワード
+    private int roleId; // ロールIDにリンク
     private Timestamp createdAt;
 
     public int getAccountId() { return accountId; }

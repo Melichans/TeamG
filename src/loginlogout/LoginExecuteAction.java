@@ -33,25 +33,29 @@ public class LoginExecuteAction extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            // Kiểm tra đăng nhập bằng AccountDAO
+            // AccountDAOでログインをチェック
             AccountDAO accountDAO = new AccountDAO();
             AccountBean account = accountDAO.login(username, password);
             if (account != null) {
-                // Lấy thông tin người dùng
+                // ユーザー情報を取得
                 UserDAO userDAO = new UserDAO(DBConnection.getConnection());
                 UserBean user = userDAO.getUserByCredentials(companyCode, username);
                 if (user != null) {
-                    // Lấy role_name từ role_id
+                    // ロールIDからロール名を取得
                     String roleName = getRoleName(account.getRoleId());
 
                     HttpSession session = request.getSession();
                     session.setAttribute("account", account);
                     session.setAttribute("user", user);
+                    session.setAttribute("role", roleName);
 
-                    // Chuyển hướng dựa trên role
+                    // ロールに基づいてリダイレクト
                     switch (roleName.toLowerCase()) {
                         case "admin":
                         	response.sendRedirect(request.getContextPath() + "/home/admin_home.jsp");
+                            break;
+                        case "developer":
+                        	response.sendRedirect(request.getContextPath() + "/home/developer_home.jsp");
                             break;
                         default:
                         	response.sendRedirect(request.getContextPath() + "/home/user_home.jsp");

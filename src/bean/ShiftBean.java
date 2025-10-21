@@ -15,7 +15,7 @@ public class ShiftBean {
     private Timestamp createdAt;
     private Integer approvedBy;
 
-    // Getters and Setters
+    // ゲッターとセッター
     public int getShiftId() { return shiftId; }
     public void setShiftId(int shiftId) { this.shiftId = shiftId; }
     public int getUserId() { return userId; }

@@ -98,10 +98,6 @@
             </div>
             
             <button type="submit" class="login-btn">ログイン</button>
-            
-            <div class="forgot">
-                <a href="#">パスワードを忘れた場合</a>
-            </div>
         </form>
         
         <% if (request.getAttribute("error") != null) { %>

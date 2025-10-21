@@ -30,7 +30,7 @@ public class ShiftDAO {
             ps.setTimestamp(7, shift.getCreatedAt());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException("Lỗi thêm ca làm việc: " + e.getMessage(), e);
+            throw new SQLException("シフト追加エラー: " + e.getMessage(), e);
         }
     }
 
@@ -57,7 +57,7 @@ public class ShiftDAO {
                 shifts.add(shift);
             }
         } catch (SQLException e) {
-            throw new SQLException("Lỗi lấy danh sách ca làm việc: " + e.getMessage(), e);
+            throw new SQLException("シフトリスト取得エラー: " + e.getMessage(), e);
         }
         return shifts;
     }

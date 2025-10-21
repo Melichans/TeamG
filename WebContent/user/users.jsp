@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.List" %>
+<%@ page import="bean.UserBean" %>
 <html>
 <head>
     <title>Users List</title>
@@ -7,24 +9,31 @@
     <h2>👥 Users Table</h2>
     <table border="1" cellpadding="5" cellspacing="0">
         <tr>
-            <th>ID</th><th>Username</th><th>Password</th><th>Role</th>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Position</th>
+            <th>Email</th>
         </tr>
         <%
-            java.sql.ResultSet rs = (java.sql.ResultSet) request.getAttribute("users");
-            if (rs != null) {
-                while (rs.next()) {
+            List<UserBean> userList = (List<UserBean>) request.getAttribute("users");
+            if (userList != null && !userList.isEmpty()) {
+                for (UserBean user : userList) {
         %>
             <tr>
-                <td><%= rs.getInt("id") %></td>
-                <td><%= rs.getString("username") %></td>
-                <td><%= rs.getString("password") %></td>
-                <td><%= rs.getString("role") %></td>
+                <td><%= user.getUserId() %></td>
+                <td><%= user.getName() %></td>
+                <td><%= user.getUsername() %></td>
+                <td><%= user.getRoleName() %></td>
+                <td><%= user.getPosition() %></td>
+                <td><%= user.getEmail() %></td>
             </tr>
         <%
                 }
             } else {
         %>
-            <tr><td colspan="4">No data found</td></tr>
+            <tr><td colspan="6">No data found</td></tr>
         <%
             }
         %>
