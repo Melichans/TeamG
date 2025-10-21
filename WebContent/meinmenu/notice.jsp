@@ -25,7 +25,7 @@
         </a>
         <a href="#" class="nav-item">
             <div class="icon">✅</div>
-            対応リスト
+            掲示板
         </a>
         <a href="notice.jsp" class="nav-item active">
             <div class="icon">🔔</div>

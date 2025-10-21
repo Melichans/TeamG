@@ -4,7 +4,7 @@
     <i class="fas fa-calendar-alt"></i><br>シフト
   </a>
   <a href="list.jsp" class="nav-item">
-    <i class="fas fa-list-check"></i><br>対応リスト
+    <i class="fas fa-list-check"></i><br>掲示板
     <span class="badge">2</span>
   </a>
   <a href="notice.jsp" class="nav-item active">
