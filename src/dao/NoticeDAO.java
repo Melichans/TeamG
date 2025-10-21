@@ -34,4 +34,14 @@ public class NoticeDAO {
         }
         return list;
     }
+    public void markAllAsRead() {
+        String sql = "UPDATE notice SET is_read = TRUE WHERE is_read = FALSE";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

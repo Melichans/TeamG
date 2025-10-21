@@ -1,5 +1,3 @@
-package servlet;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class NoticeServlet extends HttpServlet {
         List<NoticeBean> notices = dao.getAllNotices();
 
         request.setAttribute("notices", notices);
-        RequestDispatcher rd = request.getRequestDispatcher("notice.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("mainmenu/notice.jsp");
         rd.forward(request, response);
     }
 }

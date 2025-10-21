@@ -5,11 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <title>お知らせ</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="../css/style.css">
 <style>
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 20px;
+}
 .notice-container {
     max-width: 600px;
-    margin: 60px auto 100px;
+    margin: 0 auto 100px;
     background: #fff;
     border-radius: 12px;
     padding: 10px;
@@ -21,24 +27,21 @@
 .notice-item:last-child {
     border-bottom: none;
 }
-.notice-title {
-    font-weight: bold;
-    color: #333;
-}
-.notice-message {
-    color: #555;
-    margin: 3px 0;
-}
-.notice-date {
-    text-align: right;
-    color: #888;
-    font-size: 12px;
-}
+.notice-title { font-weight: bold; color: #333; }
+.notice-message { color: #555; margin: 3px 0; }
+.notice-date { text-align: right; color: #888; font-size: 12px; }
 </style>
 </head>
 <body>
 
-<h2 style="text-align:center;">お知らせ</h2>
+<div class="notice-header">
+    <h2>お知らせ</h2>
+    <form action="../NoticeReadAllServlet" method="post">
+        <button type="submit" style="background:none; border:none; color:#007bff; cursor:pointer;">
+            全て既読
+        </button>
+    </form>
+</div>
 
 <div class="notice-container">
 <%
@@ -61,12 +64,11 @@
 %>
 </div>
 
-<!-- メニューと同じナビバー -->
+<!-- ナビバー -->
 <div class="navbar">
-    <a href="shift.jsp" class="nav-item">📅<div class="label">シフト</div></a>
-    <a href="list.jsp" class="nav-item">✅<div class="label">対応リスト</div></a>
-    <a href="NoticeServlet" class="nav-item active">🔔<div class="label">お知らせ</div></a>
-    <a href="mypage.jsp" class="nav-item">👤<div class="label">マイページ</div></a>
+    <a href="menu.jsp" class="nav-item">📅<div class="label">メニュー</div></a>
+    <a href="notice.jsp" class="nav-item active">🔔<div class="label">お知らせ</div></a>
+    <a href="user.jsp" class="nav-item">👤<div class="label">ユーザー</div></a>
 </div>
 
 </body>
