@@ -19,11 +19,11 @@
     </div>
 
     <div class="navbar">
-        <a href="menu.jsp" class="nav-item">
+        <a href="#" class="nav-item">
             <div class="icon">📅</div>
             シフト
         </a>
-        <a href="#" class="nav-item">
+        <a href="board.jsp" class="nav-item">
             <div class="icon">✅</div>
             掲示板
         </a>

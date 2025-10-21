@@ -132,3 +132,26 @@ body {
     background-color: #007bff;
     color: white;
 }
+
+/* ===== 戻るボタン ===== */
+.back-to-menu a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff; /* 投稿ボタンと同じ色に統一 */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px; /* 投稿ボタンと同じ丸み */
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.2s;
+}
+
+.back-to-menu a:hover {
+    background-color: #0056b3; /* 投稿ボタンのホバーと同じトーン */
+}
+
+/* ===== 無効化ナビバー ===== */
+.nav-item.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
