@@ -45,3 +45,29 @@ body {
 .nav-item.active .icon {
     transform: scale(1.1);
 }
+
+/* ===== 対応リストやお知らせ用のバッジ表示 ===== */
+.badge {
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 2px 6px;
+}
+
+/* ===== ナビバー全体を下に固定し、重ならないように調整 ===== */
+body {
+    margin: 0;
+    font-family: "Noto Sans JP", sans-serif;
+    background-color: #f9f9f9;
+    padding-bottom: 70px; /* ← ナビバーの高さ分だけ下に余白を確保 */
+}
+
+/* ===== ナビバーアイコンアニメーション微調整 ===== */
+.nav-item.active .icon {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}

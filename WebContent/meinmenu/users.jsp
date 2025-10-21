@@ -29,6 +29,8 @@
             }
         %>
     </table>
+    <%@ include file="navbar.jsp" %>
+    
 </body>
 </html>
  

@@ -1,30 +1,32 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メニュー</title>
+    <title>メインメニュー</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="content">
-        <h2>メインメニュー</h2>
-        <p>ここにメインの内容を表示します。</p>
+        <h1>メインメニュー</h1>
     </div>
 
-    <!-- ナビゲーションバー -->
     <div class="navbar">
         <a href="menu.jsp" class="nav-item active">
             <div class="icon">📅</div>
-            <div class="label">シフト</div>
+            シフト
+        </a>
+        <a href="#" class="nav-item">
+            <div class="icon">✅</div>
+            対応リスト
         </a>
         <a href="notice.jsp" class="nav-item">
             <div class="icon">🔔</div>
-            <div class="label">お知らせ</div>
+            お知らせ
         </a>
         <a href="user.jsp" class="nav-item">
             <div class="icon">👤</div>
-            <div class="label">ユーザー</div>
+            マイページ
         </a>
     </div>
 </body>
