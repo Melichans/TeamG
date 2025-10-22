@@ -12,10 +12,10 @@
 <div class="content">
     <h1>掲示板</h1>
 
-    <!-- メインメニューに戻るリンク -->
-    <div class="back-to-menu">
-        <a href="<%=request.getContextPath()%>/menu.jsp">← メインメニューに戻る</a>
-    </div>
+<!-- メインメニューに戻るボタン -->
+<div class="back-to-menu">
+    <a href="menu.jsp" class="menu-button">← メインメニューに戻る</a>
+</div>
 
     <!-- 投稿フォーム -->
     <form action="<%=request.getContextPath()%>/BoardServlet" method="post" class="post-form">
@@ -63,10 +63,10 @@
         <div class="icon">💬</div>
         掲示板
     </a>
-    <a href="<%=request.getContextPath()%>/notice.jsp" class="nav-item">
-        <div class="icon">🔔</div>
-        お知らせ
-    </a>
+        <a href="notice.jsp" class="nav-item">
+            <div class="icon">🔔</div>
+            お知らせ
+        </a>
     <a href="<%=request.getContextPath()%>/user.jsp" class="nav-item">
         <div class="icon">👤</div>
         マイページ
