@@ -24,7 +24,7 @@ public class AddShiftAction extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        // セッションからユーザーを取得（ログイン済みと仮定）
+        // Lấy user từ session (giả định đã đăng nhập)
         UserBean user = (UserBean) request.getSession().getAttribute("user");
         if (user == null) {
             response.sendRedirect("loginAction");
@@ -34,9 +34,9 @@ public class AddShiftAction extends HttpServlet {
         try {
             ShiftBean shift = new ShiftBean();
             shift.setUserId(user.getUserId());
-            shift.setDeptId(Integer.parseInt(request.getParameter("deptId"))); // フォームから取得
-            shift.setShiftDate(java.sql.Date.valueOf(request.getParameter("shiftDate"))); // フォーマット: YYYY-MM-DD
-            shift.setStartTime(java.sql.Time.valueOf(request.getParameter("startTime"))); // フォーマット: HH:MM:SS
+            shift.setDeptId(Integer.parseInt(request.getParameter("deptId"))); // Lấy từ form
+            shift.setShiftDate(java.sql.Date.valueOf(request.getParameter("shiftDate"))); // Format: YYYY-MM-DD
+            shift.setStartTime(java.sql.Time.valueOf(request.getParameter("startTime"))); // Format: HH:MM:SS
             shift.setEndTime(java.sql.Time.valueOf(request.getParameter("endTime")));
             shift.setStatus("未提出");
             shift.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -44,7 +44,7 @@ public class AddShiftAction extends HttpServlet {
             ShiftDAO shiftDAO = new ShiftDAO(DBConnection.getConnection());
             shiftDAO.addShift(shift);
 
-            response.sendRedirect("user_home.jsp?message=シフト申請が成功しました。"); // メッセージ付きでリダイレクト
+            response.sendRedirect("user_home.jsp?message=シフト申請が成功しました。"); // Redirect với message
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "シフト申請エラー: " + e.getMessage());

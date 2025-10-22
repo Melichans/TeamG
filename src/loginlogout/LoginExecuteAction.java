@@ -42,7 +42,7 @@ public class LoginExecuteAction extends HttpServlet {
                 UserBean user = userDAO.getUserByCredentials(companyCode, username);
                 if (user != null) {
                     // ロールIDからロール名を取得
-                    String roleName = getRoleName(account.getRoleId());
+                    String roleName = getRoleNameFromId(account.getRoleId());
 
                     HttpSession session = request.getSession();
                     session.setAttribute("account", account);
@@ -54,7 +54,7 @@ public class LoginExecuteAction extends HttpServlet {
                         case "admin":
                         	response.sendRedirect(request.getContextPath() + "/home/admin_home.jsp");
                             break;
-                        case "developer":
+                        case "developer": // Assuming developer role also exists and maps to an ID
                         	response.sendRedirect(request.getContextPath() + "/home/developer_home.jsp");
                             break;
                         default:
@@ -77,15 +77,16 @@ public class LoginExecuteAction extends HttpServlet {
         }
     }
 
-    private String getRoleName(int roleId) throws SQLException {
-        String roleName = "USER";
+    private String getRoleNameFromId(int roleId) throws SQLException {
+        String roleName = "USER"; // Default role
         String sql = "SELECT role_name FROM role WHERE role_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, roleId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                roleName = rs.getString("role_name");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    roleName = rs.getString("role_name");
+                }
             }
         }
         return roleName;

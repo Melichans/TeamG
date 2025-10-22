@@ -1,0 +1,157 @@
+body {
+    margin: 0;
+    font-family: "Noto Sans JP", sans-serif;
+    background-color: #f9f9f9;
+}
+
+.content {
+    padding: 80px 20px 100px;
+    text-align: center;
+}
+
+.navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    flex: 1;
+    transition: color 0.2s;
+}
+
+.nav-item .icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    color: #007bff;
+}
+
+.nav-item.active .icon {
+    transform: scale(1.1);
+}
+
+/* ===== 対応リストやお知らせ用のバッジ表示 ===== */
+.badge {
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 2px 6px;
+}
+
+/* ===== ナビバー全体を下に固定し、重ならないように調整 ===== */
+body {
+    margin: 0;
+    font-family: "Noto Sans JP", sans-serif;
+    background-color: #f9f9f9;
+    padding-bottom: 70px; /* ← ナビバーの高さ分だけ下に余白を確保 */
+}
+
+/* ===== ナビバーアイコンアニメーション微調整 ===== */
+.nav-item.active .icon {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.post-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post-form textarea {
+    width: 90%;
+    height: 80px;
+    padding: 10px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.post-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.post {
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.reactions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reactions button {
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.reactions button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* ===== 戻るボタン ===== */
+.back-to-menu a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff; /* 投稿ボタンと同じ色に統一 */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px; /* 投稿ボタンと同じ丸み */
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.2s;
+}
+
+.back-to-menu a:hover {
+    background-color: #0056b3; /* 投稿ボタンのホバーと同じトーン */
+}
+
+/* ===== 無効化ナビバー ===== */
+.nav-item.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

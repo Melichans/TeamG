@@ -4,18 +4,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>管理者ホーム - SSAI</title>
-    <style>
-        body { font-family: 'Yu Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-        .header { background: #007bff; color: white; padding: 15px; border-radius: 5px 5px 0 0; }
-        .content { background: white; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .user-info { margin-bottom: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; }
-        .menu { display: flex; gap: 15px; margin-top: 20px; }
-        .menu a { padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; }
-        .menu a:hover { background: #218838; }
-        .logout { float: right; margin-top: 10px; }
-        .logout a { color: #dc3545; text-decoration: none; font-weight: bold; }
-    </style>
+    <title>開発者ホーム - SSAI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
     <% 
@@ -26,26 +17,41 @@
         }
     %>
     
-    <div class="header">
-        <h1>管理者ホーム</h1>
-    </div>
-    
-    <div class="content">
-        <div class="user-info">
-            <h3>ようこそ、<%= user.getName() %>さん！</h3>
-            <p><strong>会社:</strong> <%= user.getCompanyName() %></p>
-            <p><strong>役職:</strong> <%= user.getPosition() %></p>
-            <p><strong>メール:</strong> <%= user.getEmail() %></p>
-        </div>
-        
-        <div class="menu">
-            <a href="${pageContext.request.contextPath}/shift_list.jsp">シフト管理</a>
-            <a href="${pageContext.request.contextPath}/user_list.jsp">ユーザー管理</a>
-        </div>
-        
-        <div class="logout">
-            <a href="${pageContext.request.contextPath}/loginlogout/logoutAction">ログアウト</a>
-        </div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="title">開発者ホーム</div>
+            <div class="header-icons">
+                <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="icon" title="ログアウト"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </header>
+
+        <main>
+            <!-- User Info -->
+            <section class="user-info-card">
+                <h3>ようこそ、<%= user.getName() %>さん！</h3>
+                <p><i class="fa-solid fa-building"></i> <strong>会社:</strong> <%= user.getCompanyName() %></p>
+                <p><i class="fa-solid fa-user-tie"></i> <strong>役職:</strong> <%= user.getPosition() %></p>
+                <p><i class="fa-solid fa-envelope"></i> <strong>メール:</strong> <%= user.getEmail() %></p>
+            </section>
+
+            <!-- Menu -->
+            <section class="admin-menu">
+                <a href="${pageContext.request.contextPath}/shift_list.jsp" class="menu-item">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>シフト管理</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/user_list.jsp" class="menu-item">
+                    <i class="fa-solid fa-users-cog"></i>
+                    <span>ユーザー管理</span>
+                </a>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Shift AI. All rights reserved.</p>
+        </footer>
     </div>
 </body>
 </html>
