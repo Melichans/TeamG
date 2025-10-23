@@ -70,7 +70,7 @@
         <button>シフト</button>
         <button>処理一覧</button>
         <button>通知</button>
-        <button>マイページ</button>
+        <button onclick="location.href='${pageContext.request.contextPath}/mypage/myPage'">マイページ</button>
     </div>
 </div>
 
