@@ -1,9 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
-<html>
+<html lang="${sessionScope.lang != null ? sessionScope.lang : 'ja'}">
 <head>
     <meta charset="UTF-8">
-    <title>SSAI ログイン</title>
+
+    <!-- 言語設定 -->
+    <fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'ja'}" />
+    <fmt:setBundle basename="messages.messages" />
+
+    <title><fmt:message key="login.title" /></title>
+
     <style>
         body { 
             font-family: 'Yu Gothic', sans-serif; 
@@ -60,46 +67,54 @@
         .login-btn:hover {
             background-color: #0056b3;
         }
-        .forgot {
-            text-align: right;
-        }
-        .forgot a {
-            font-size: 12px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .forgot a:hover {
-            text-decoration: underline;
-        }
         .error {
             color: #dc3545;
             margin-top: 15px;
             font-size: 14px;
         }
+        .lang-switch {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .lang-switch a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>SSAI</h2>
+        <!-- 言語切り替え -->
+        <div class="lang-switch">
+            <a href="${pageContext.request.contextPath}/ChangeLanguageServlet?lang=ja">日本語</a> |
+            <a href="${pageContext.request.contextPath}/ChangeLanguageServlet?lang=en">English</a>
+        </div>
+
+        <h2><fmt:message key="login.header" /></h2>
+
         <form action="${pageContext.request.contextPath}/loginlogout/loginExecute" method="post">
             <div class="form-group">
-                <label>企業ID</label>
+                <label><fmt:message key="login.companyId" /></label>
                 <input type="text" name="companyCode" placeholder="COMP001" required>
             </div>
-            
+
             <div class="form-group">
-                <label>ユーザーID</label>
+                <label><fmt:message key="login.userId" /></label>
                 <input type="text" name="username" placeholder="admin" required>
             </div>
-            
+
             <div class="form-group">
-                <label>パスワード</label>
+                <label><fmt:message key="login.password" /></label>
                 <input type="password" name="password" placeholder="admin123" required>
             </div>
-            
-            <button type="submit" class="login-btn">ログイン</button>
+
+            <button type="submit" class="login-btn"><fmt:message key="login.button" /></button>
         </form>
-        
+
         <% if (request.getAttribute("error") != null) { %>
             <div class="error">
                 <%= request.getAttribute("error") %>
@@ -108,3 +123,4 @@
     </div>
 </body>
 </html>
+

@@ -1,14 +1,18 @@
+/* ======== style.css ======== */
 body {
     margin: 0;
     font-family: "Noto Sans JP", sans-serif;
     background-color: #f9f9f9;
+    padding-bottom: 70px; /* ナビバー分の余白 */
 }
 
+/* ===== メインコンテンツ ===== */
 .content {
     padding: 80px 20px 100px;
     text-align: center;
 }
 
+/* ===== フッターナビバー ===== */
 .navbar {
     position: fixed;
     bottom: 0;
@@ -44,9 +48,10 @@ body {
 
 .nav-item.active .icon {
     transform: scale(1.1);
+    transition: transform 0.2s;
 }
 
-/* ===== 対応リストやお知らせ用のバッジ表示 ===== */
+/* ===== お知らせバッジ ===== */
 .badge {
     position: absolute;
     top: 2px;
@@ -58,20 +63,7 @@ body {
     padding: 2px 6px;
 }
 
-/* ===== ナビバー全体を下に固定し、重ならないように調整 ===== */
-body {
-    margin: 0;
-    font-family: "Noto Sans JP", sans-serif;
-    background-color: #f9f9f9;
-    padding-bottom: 70px; /* ← ナビバーの高さ分だけ下に余白を確保 */
-}
-
-/* ===== ナビバーアイコンアニメーション微調整 ===== */
-.nav-item.active .icon {
-    transform: scale(1.1);
-    transition: transform 0.2s;
-}
-
+/* ===== 投稿フォーム ===== */
 .post-form {
     margin-bottom: 20px;
     display: flex;
@@ -99,6 +91,10 @@ body {
     cursor: pointer;
 }
 
+.post-form button:hover {
+    background-color: #0056b3;
+}
+
 .post {
     background-color: #fff;
     margin: 10px 0;
@@ -111,6 +107,7 @@ body {
     text-align: left;
 }
 
+/* ===== リアクションボタン ===== */
 .reactions {
     display: flex;
     align-items: center;
@@ -137,17 +134,17 @@ body {
 .back-to-menu a {
     display: inline-block;
     padding: 8px 16px;
-    background-color: #007bff; /* 投稿ボタンと同じ色に統一 */
+    background-color: #007bff;
     color: white;
     text-decoration: none;
-    border-radius: 8px; /* 投稿ボタンと同じ丸み */
+    border-radius: 8px;
     font-weight: bold;
     margin-bottom: 20px;
     transition: background-color 0.2s;
 }
 
 .back-to-menu a:hover {
-    background-color: #0056b3; /* 投稿ボタンのホバーと同じトーン */
+    background-color: #0056b3;
 }
 
 /* ===== 無効化ナビバー ===== */
@@ -155,3 +152,4 @@ body {
     pointer-events: none;
     opacity: 0.5;
 }
+

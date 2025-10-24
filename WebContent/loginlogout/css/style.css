@@ -1,8 +1,12 @@
+/* style.css */
+
 body {
     font-family: 'Yu Gothic', sans-serif;
     text-align: center;
     margin-top: 60px;
 }
+
+/* ログインフォーム */
 .login-form {
     width: 300px;
     margin: 50px auto;
@@ -10,13 +14,16 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 .login-form h2 {
     text-align: center;
 }
+
 .login-form label {
     display: block;
     margin: 10px 0 5px;
 }
+
 .login-form input {
     width: 100%;
     padding: 8px;
@@ -24,6 +31,7 @@ body {
     border: 1px solid #000;
     box-sizing: border-box;
 }
+
 .login-form input[type="submit"] {
     background-color: #007bff;
     color: white;
@@ -31,16 +39,19 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .login-form .forgot {
     text-align: right;
     width: 100%;
     margin: 10px 0;
 }
+
 .login-form .forgot a {
     font-size: 12px;
     color: #00f;
     text-decoration: none;
 }
+
 .login-form .forgot a:hover {
     text-decoration: underline;
 }
