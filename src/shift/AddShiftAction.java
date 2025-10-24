@@ -14,7 +14,6 @@ public class AddShiftAction extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Add.jsp にフォワード（フォルダ構成に合わせて修正）
         RequestDispatcher dispatcher =
                 request.getRequestDispatcher("/AddShift/Add.jsp");
         dispatcher.forward(request, response);

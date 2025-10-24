@@ -12,6 +12,10 @@
 
     <form action="<%= request.getContextPath() %>/shift/AddShiftExecuteAction" method="post">
         <input type="hidden" name="userId" value="1">
+        <div class="form-group">
+            <label for="userName">名前：</label>
+            <input type="text" id="userName" name="userName" required>
+        </div>       
 
         <div class="form-group">
             <label for="shiftDate">日にち：</label>

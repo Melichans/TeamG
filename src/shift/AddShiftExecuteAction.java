@@ -20,7 +20,6 @@ public class AddShiftExecuteAction extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        // フォームから取得
         int userId = Integer.parseInt(request.getParameter("userId"));
         String shiftDate = request.getParameter("shiftDate");
         String startTime = request.getParameter("startTime");
@@ -38,9 +37,8 @@ public class AddShiftExecuteAction extends HttpServlet {
 
             pstmt.executeUpdate();
             pstmt.close();
-
-            // 完了後は再び Add.jsp に戻る
-            request.setAttribute("message", "登録が完了しました！");
+        
+            request.setAttribute("message", "登録が完了しました");
             RequestDispatcher dispatcher =
                     request.getRequestDispatcher("/AddShift/Add.jsp");
             dispatcher.forward(request, response);
