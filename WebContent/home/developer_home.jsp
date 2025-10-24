@@ -22,7 +22,7 @@
         <header>
             <div class="title">開発者ホーム</div>
             <div class="header-icons">
-                <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="icon" title="ログアウト"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <a href="${pageContext.request.contextPath}/menu/mypage.jsp" class="icon" title="マイページ"><i class="fa-solid fa-user"></i></a>
             </div>
         </header>
 

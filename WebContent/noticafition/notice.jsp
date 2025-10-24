@@ -110,7 +110,7 @@
                 <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
                 <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
                 <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item active"><i class="fa-solid fa-bell"></i><span>通知</span></a>
-                <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="nav-item"><i class="fa-solid fa-user"></i><span>ログアウト</span></a>
+                <a href="${pageContext.request.contextPath}/mypage/my_page.jsp" class="nav-item"><i class="fa-solid fa-user"></i><span>マイページ</span></a>
             </nav>
         </footer>
     </div>

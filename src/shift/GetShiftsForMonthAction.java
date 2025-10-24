@@ -3,6 +3,7 @@ package shift;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.naming.InitialContext;
@@ -26,10 +27,10 @@ import dao.ShiftDAO;
 public class GetShiftsForMonthAction extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /** コネクションプール（JNDI）からコネクションを取得します */
+    /** コネクションプールからコネクションを取得 */
     private Connection getConnection() throws NamingException, java.sql.SQLException {
         InitialContext ctx = new InitialContext();
-        DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/TeamG"); 
+        DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/TeamG");
         return ds.getConnection();
     }
 
@@ -40,9 +41,8 @@ public class GetShiftsForMonthAction extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        PrintWriter out = response.getWriter();
-        
-        try {
+        try (PrintWriter out = response.getWriter()) {
+
             // 🧩 ログインチェック
             HttpSession session = request.getSession(false);
             UserBean user = (session != null) ? (UserBean) session.getAttribute("user") : null;
@@ -53,33 +53,43 @@ public class GetShiftsForMonthAction extends HttpServlet {
                 return;
             }
 
+            // 🧮 パラメータチェック
             String yearParam = request.getParameter("year");
             String monthParam = request.getParameter("month");
 
-            if (yearParam == null || yearParam.isEmpty() || monthParam == null || monthParam.isEmpty()) {
+            if (yearParam == null || monthParam == null || yearParam.isEmpty() || monthParam.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.print("{\"error\":\"Year and month parameters are required and cannot be empty\"}");
+                out.print("{\"error\":\"Year and month parameters are required\"}");
                 return;
             }
 
             int year = Integer.parseInt(yearParam);
-            int month = Integer.parseInt(monthParam) + 1; // JavaScriptの月は0から始まるため
+            int month = Integer.parseInt(monthParam) + 1; // JSのmonthは0始まり
 
-            // 🧠 DAOを呼び出してデータを取得
+            // 🧠 DAOを呼び出し
             try (Connection conn = getConnection()) {
                 ShiftDAO dao = new ShiftDAO(conn);
                 List<ShiftBean> shifts = dao.getShiftsByMonth(user.getUserId(), year, month);
 
-                // 🧱 JSONに変換
                 JSONArray jsonArr = new JSONArray();
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
                 for (ShiftBean s : shifts) {
                     JSONObject obj = new JSONObject();
-                    obj.put("shiftDate", s.getShiftDate().toString());
-                    obj.put("startTime", s.getStartTime().toString().substring(0, 5));
-                    obj.put("endTime", s.getEndTime().toString().substring(0, 5));
-                    obj.put("status", s.getStatus());
-                    obj.put("deptName", s.getDeptName());
+                    obj.put("shiftDate", s.getShiftDate() != null ? s.getShiftDate().toString() : "");
+                    obj.put("startTime", (s.getStartTime() != null) ? timeFormat.format(s.getStartTime()) : "");
+                    obj.put("endTime", (s.getEndTime() != null) ? timeFormat.format(s.getEndTime()) : "");
+                    obj.put("status", (s.getStatus() != null) ? s.getStatus() : "");
+                    obj.put("deptName", (s.getDeptName() != null) ? s.getDeptName() : "");
                     jsonArr.put(obj);
+                }
+                for (ShiftBean s : shifts) {
+                    System.out.println("DEBUG: " +
+                        "shift_date=" + s.getShiftDate() +
+                        ", start=" + s.getStartTime() +
+                        ", end=" + s.getEndTime() +
+                        ", dept=" + s.getDeptName() +
+                        ", status=" + s.getStatus());
                 }
 
                 out.print(jsonArr.toString());
@@ -88,7 +98,7 @@ public class GetShiftsForMonthAction extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            out.print("{\"error\": \"Server error\"}");
+            response.getWriter().print("{\"error\":\"Internal Server Error\"}");
         }
     }
 }

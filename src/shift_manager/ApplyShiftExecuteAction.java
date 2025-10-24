@@ -38,7 +38,14 @@ public class ApplyShiftExecuteAction extends HttpServlet {
             // shiftDAO.applyForShift(shiftIdToApply, currentUser.getUserId());
             
             // For now, just redirect with a success message
-            response.sendRedirect(request.getContextPath() + "/shift_manager/OpenShiftsAction?message=シフトの登録が成功しました！");
+            int updatedRows = shiftDAO.applyForShift(shiftIdToApply, currentUser.getUserId());
+            if (updatedRows > 0) {
+                response.sendRedirect(request.getContextPath() + "/shift_manager/OpenShiftsAction?message=シフトの登録が成功しました！");
+            } else {
+                request.setAttribute("error", "シフトの登録に失敗しました。既に他のユーザーが登録したか、シフトが見つかりません。");
+                RequestDispatcher rd = request.getRequestDispatcher("/shift_manager/open_shifts.jsp");
+                rd.forward(request, response);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

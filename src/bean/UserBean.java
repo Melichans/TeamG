@@ -14,6 +14,9 @@ public class UserBean {
     private String phone;
     private String email;
     private Date joinedDate;
+    private boolean pushNotificationsEnabled;
+    private String username;
+    private String roleName;
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
@@ -48,8 +51,8 @@ public class UserBean {
     public Date getJoinedDate() { return joinedDate; }
     public void setJoinedDate(Date joinedDate) { this.joinedDate = joinedDate; }
 
-    private String username;
-    private String roleName;
+    public boolean isPushNotificationsEnabled() { return pushNotificationsEnabled; }
+    public void setPushNotificationsEnabled(boolean pushNotificationsEnabled) { this.pushNotificationsEnabled = pushNotificationsEnabled; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

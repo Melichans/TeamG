@@ -70,6 +70,7 @@
                       if (shift.getShiftDate() != null && shift.getShiftDate().toString().equals(dateString)) {
                         out.print("<div class='shift-entry'>");
                         out.print(shift.getStartTime() + "〜" + shift.getEndTime());
+                        out.print("<br>" + shift.getDeptName());
                         out.print("</div>");
                       }
                     }

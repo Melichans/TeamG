@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>処理一覧 - SSAI</title>
+    <title>緊急シフト一覧 - SSAI</title>
     <link rel="stylesheet" href="../home/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
@@ -36,17 +36,22 @@
         .shift-table tbody tr:hover {
             background-color: #f5f5f5;
         }
-        .shift-table .apply-btn {
-            padding: 8px 12px;
+        .add-button-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .add-button {
+            padding: 10px 20px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            text-decoration: none;
             transition: background-color 0.2s ease;
         }
-        .shift-table .apply-btn:hover {
+        .add-button:hover {
             background-color: #308acb;
         }
         .message-box {
@@ -70,9 +75,9 @@
 <body>
     <div class="container">
         <header>
-            <div class="title">処理一覧</div>
+            <div class="title">緊急シフト一覧</div>
             <div class="header-icons">
-                <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="icon" title="ホーム"><i class="fa-solid fa-house"></i></a>
+                <a href="${pageContext.request.contextPath}/home/admin_home.jsp" class="icon" title="管理者ホーム"><i class="fa-solid fa-house"></i></a>
             </div>
         </header>
 
@@ -82,13 +87,17 @@
                     <%= request.getAttribute("error") %>
                 </div>
             <% } %>
-            <% if (request.getParameter("message") != null) { %>
+            <% if (request.getAttribute("success") != null) { %>
                 <div class="message-box success">
-                    <%= request.getParameter("message") %>
+                    <%= request.getAttribute("success") %>
                 </div>
             <% } %>
 
-            <h2>募集中のシフト</h2>
+            <div class="add-button-container">
+                <a href="${pageContext.request.contextPath}/admin/add_urgent_shift.jsp" class="add-button">新しい緊急シフトを追加</a>
+            </div>
+
+            <h2>募集中の緊急シフト</h2>
             <div class="shift-table-container">
                 <table class="shift-table">
                     <thead>
@@ -97,34 +106,35 @@
                             <th>日付</th>
                             <th>開始</th>
                             <th>終了</th>
+                            <th>部署</th>
                             <th>ステータス</th>
                             <th>アクション</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% 
-                            List<ShiftBean> openShifts = (List<ShiftBean>) request.getAttribute("openShifts");
-                            if (openShifts != null && !openShifts.isEmpty()) {
-                                for (ShiftBean shift : openShifts) {
+                            List<ShiftBean> urgentShifts = (List<ShiftBean>) request.getAttribute("urgentShifts");
+                            if (urgentShifts != null && !urgentShifts.isEmpty()) {
+                                for (ShiftBean shift : urgentShifts) {
                         %>
                                     <tr>
                                         <td><%= shift.getShiftId() %></td>
                                         <td><%= shift.getShiftDate() %></td>
                                         <td><%= shift.getStartTime() %></td>
                                         <td><%= shift.getEndTime() %></td>
+                                        <td><%= shift.getDeptName() %></td>
                                         <td><%= shift.getStatus() %></td>
                                         <td>
-                                            <form action="${pageContext.request.contextPath}/shift_manager/ApplyShiftExecuteAction" method="post">
-                                                <input type="hidden" name="shiftId" value="<%= shift.getShiftId() %>">
-                                                <button type="submit" class="apply-btn">登録</button>
-                                            </form>
+                                            <!-- Admin actions like edit/delete could go here -->
+                                            <!-- For now, just a placeholder or no action -->
+                                            アクションなし
                                         </td>
                                     </tr>
-                        <%      }
-                            } else {
+                        <%      } 
+                            } else { 
                         %>
                                 <tr>
-                                    <td colspan="6">現在募集中のシフトはありません。</td>
+                                    <td colspan="7">現在、募集中の緊急シフトはありません。</td>
                                 </tr>
                         <%  }
                         %>
@@ -132,15 +142,6 @@
                 </table>
             </div>
         </main>
-
-        <footer>
-            <nav>
-                <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
-                <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item active"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
-                <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item"><i class="fa-solid fa-bell"></i><span>通知</span></a>
-                <a href="${pageContext.request.contextPath}/mypage/my_page.jsp" class="nav-item"><i class="fa-solid fa-user"></i><span>マイページ</span></a>
-            </nav>
-        </footer>
     </div>
 </body>
 </html>

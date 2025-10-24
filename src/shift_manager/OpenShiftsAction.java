@@ -38,7 +38,7 @@ public class OpenShiftsAction extends HttpServlet {
             
             // Placeholder: Fetch all shifts for now, or implement getOpenShifts in ShiftDAO
             // For now, let's just pass an empty list or a dummy list
-            List<ShiftBean> openShifts = new java.util.ArrayList<>(); // Replace with actual data fetching
+            List<ShiftBean> openShifts = shiftDAO.getOpenShifts(); // Replace with actual data fetching
 
             request.setAttribute("openShifts", openShifts);
             RequestDispatcher rd = request.getRequestDispatcher("/shift_manager/open_shifts.jsp");

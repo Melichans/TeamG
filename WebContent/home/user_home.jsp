@@ -27,8 +27,12 @@
         display: none; /* Initially hidden */
     }
     td.selected-day {
-        border: 2px solid #007bff;
+        border: 2px solid #007bff !important;
         border-radius: 50%;
+    }
+    td.is-today {
+        font-weight: bold;
+        color: #0d6efd;
     }
 </style>
 </head>
@@ -87,7 +91,7 @@
             <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item active"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
             <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
             <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item"><i class="fa-solid fa-bell"></i><span>通知</span></a>
-            <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="nav-item"><i class="fa-solid fa-user"></i><span>ログアウト</span></a>
+            <a href="${pageContext.request.contextPath}/mypage/my_page.jsp" class="nav-item active"><i class="fa-solid fa-user"></i><span>マイページ</span></a>
         </nav>
     </footer>
 
@@ -106,9 +110,8 @@ async function fetchShiftsForMonth(year, month) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         monthShifts = await response.json();
-        alert(monthShifts.length + " ca làm việc được tải."); // DEBUGGING ALERT
+        console.log("DEBUG monthShifts:", monthShifts);
     } catch (error) {
-        alert("Lỗi: Không thể tải dữ liệu ca làm việc. " + error); // DEBUGGING ALERT
         console.error("Could not fetch shifts:", error);
         monthShifts = [];
     }
@@ -120,15 +123,12 @@ function renderCalendar(year, month) {
     
     calendarTitle.textContent = year + '年' + (month + 1) + '月';
     calendarBody.innerHTML = '';
-    if (selectedCell) {
-        selectedCell.classList.remove('selected-day');
-        selectedCell = null;
-    }
+    // Do not null out selectedCell here to persist selection across month navigations
 
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     
-    const shiftDates = monthShifts.map(s => new Date(s.shiftDate + 'T00:00:00').getDate());
+    const shiftDates = monthShifts.map(s => new Date(s.shiftDate.replace(/-/g, '/')).getDate());
 
     let date = 1;
     for (let i = 0; i < 6; i++) {
@@ -141,27 +141,35 @@ function renderCalendar(year, month) {
                 // Empty cell
             } else {
                 cell.textContent = date;
-                const currentDate = new Date(year, month, date);
-                const dateStr = currentDate.toISOString().split('T')[0];
+                
+                const currentYear = year;
+                const currentMonth = month;
+                const currentDate = date;
+
+                cell.addEventListener('click', () => {
+                    if (selectedCell) {
+                        selectedCell.classList.remove('selected-day');
+                    }
+                    cell.classList.add('selected-day');
+                    selectedCell = cell;
+                    displayShiftInfo(currentYear, currentMonth, currentDate);
+                });
 
                 if (shiftDates.includes(date)) {
                     cell.classList.add('has-shift');
                     const dot = document.createElement('div');
                     dot.className = 'shift-dot';
                     cell.appendChild(dot);
-                    
-                    cell.addEventListener('click', () => {
-                        if (selectedCell) {
-                            selectedCell.classList.remove('selected-day');
-                        }
-                        cell.classList.add('selected-day');
-                        selectedCell = cell;
-                        displayShiftInfo(dateStr);
-                    });
                 }
 
+                // Handle today's date
                 if (date === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
-                    cell.classList.add('today');
+                    cell.classList.add('is-today'); // Style for today's text
+                    // Set initial selection to today
+                    if (selectedCell === null) { // Only on first load
+                        cell.classList.add('selected-day');
+                        selectedCell = cell;
+                    }
                 }
                 date++;
             }
@@ -174,32 +182,42 @@ function renderCalendar(year, month) {
     }
 }
 
-function displayShiftInfo(dateStr) {
+function displayShiftInfo(year, month, day) {
+    const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
     const shiftsForDay = monthShifts.filter(s => s.shiftDate === dateStr);
     const infoSection = document.getElementById('shift-info-section');
     const dateDisplay = document.getElementById('shift-info-date');
     const detailsContainer = document.getElementById('shift-details-container');
 
+    dateDisplay.textContent = (month + 1) + '月' + day + '日';
+
     if (shiftsForDay.length > 0) {
-        const dateObj = new Date(dateStr + 'T00:00:00');
-        const week = ['日', '月', '火', '水', '木', '金', '土'];
-        dateDisplay.textContent = `${dateObj.getMonth() + 1}月${dateObj.getDate()}日(${week[dateObj.getDay()]}曜日)`;
-        
         detailsContainer.innerHTML = '';
         shiftsForDay.forEach(shift => {
             const shiftDiv = document.createElement('div');
             shiftDiv.className = 'shift-details';
+
+            // Directly display what the backend sends.
+            const startTime = shift.startTime;
+            const endTime = shift.endTime;
+
             shiftDiv.innerHTML = `
-                <p class="time"><i class="fa-regular fa-clock"></i> ${shift.startTime.substring(0,5)} ～ ${shift.endTime.substring(0,5)}</p>
-                <p class="section"><i class="fa-solid fa-utensils"></i> ${shift.deptName}</p>
+                <p class="time"><i class="fa-regular fa-clock"></i> 
+                    \${shift.startTime ? shift.startTime : "未設定"} ～ \${shift.endTime ? shift.endTime : "未設定"}
+                </p>
+                <p class="section"><i class="fa-solid fa-utensils"></i> 
+                    \${shift.deptName && shift.deptName !== "false" ? shift.deptName : "未設定"}
+                </p>
             `;
+
+
+
             detailsContainer.appendChild(shiftDiv);
         });
-
-        infoSection.style.display = 'block';
     } else {
-        infoSection.style.display = 'none';
+        detailsContainer.innerHTML = '<p>本日、シフトはありません。</p>';
     }
+    infoSection.style.display = 'block';
 }
 
 async function updateCalendar() {
@@ -207,8 +225,16 @@ async function updateCalendar() {
     const month = currentDisplayedDate.getMonth();
     await fetchShiftsForMonth(year, month);
     renderCalendar(year, month);
-    // Hide shift info when calendar updates
-    document.getElementById('shift-info-section').style.display = 'none'; 
+
+    // After rendering, if a day is selected, show its info.
+    if (selectedCell) {
+        const day = parseInt(selectedCell.textContent);
+        const month = currentDisplayedDate.getMonth();
+        const year = currentDisplayedDate.getFullYear();
+        displayShiftInfo(year, month, day);
+    } else {
+        document.getElementById('shift-info-section').style.display = 'none'; 
+    }
 }
 
 function setupCalendarNavigation() {

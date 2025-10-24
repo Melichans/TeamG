@@ -22,7 +22,7 @@
         <header>
             <div class="title">管理者ホーム</div>
             <div class="header-icons">
-                <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="icon" title="ログアウト"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <a href="${pageContext.request.contextPath}/mypage/my_page.jsp" class="icon" title="マイページ"><i class="fa-solid fa-user"></i></a>
             </div>
         </header>
 
@@ -45,10 +45,16 @@
                     <i class="fa-solid fa-users-cog"></i>
                     <span>ユーザー管理</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/admin/add_notice.jsp" class="menu-item">
-                    <i class="fa-solid fa-bullhorn"></i>
-                    <span>お知らせ追加</span>
-                </a>
+                <div class="admin-menu-row">
+                    <a href="${pageContext.request.contextPath}/admin/ListUrgentShiftsAction" class="menu-item new-feature">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>掲示板</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/add_notice.jsp" class="menu-item">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <span>お知らせ追加</span>
+                    </a>
+                </div>
             </section>
         </main>
 

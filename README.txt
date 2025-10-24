@@ -49,3 +49,40 @@ This file records the changes made by the Gemini AI assistant.
     - Removed redundant and incorrect shift fetching logic from `HomeUserAction.java` as calendar data is now fetched dynamically by JavaScript.
     - Cleaned up `HomeUserAction.java` by removing unused imports and local variables, resolving compiler warnings.
     - Fixed 404 Not Found error for calendar data by ensuring correct context path resolution in `user_home.jsp`'s JavaScript fetch call.
+
+- 2025-10-24: **Troubleshooting & System Integration:**
+    - Diagnosed and fixed a complex data display issue (`~` for time) by identifying and resolving a Java compiler version mismatch (Java 15 vs. Java 8) and a resulting syntax incompatibility (Text Blocks) in `ShiftDAO.java`.
+    - Corrected a critical SQL bug in `ShiftDAO.java` by quoting the reserved keyword `status` with backticks.
+    - Fixed the calendar's selected-day circle being "stuck" on the current date by resolving a CSS class conflict in `user_home.jsp`.
+    - Integrated new `mypage.jsp` and `password_change.jsp` pages into the application.
+    - Updated main navigation menus across 6 files, replacing the "Logout" link with a "My Page" link.
+    - Refactored `mypage.jsp` and `password_change.jsp` to use the standard application layout and shared stylesheet for a consistent UI, width, and feel.
+    - Cleaned up obsolete CSS files to improve project structure.
+
+- 2025-10-24: **Shift Display Fixes:**
+    - Fixed `ShiftListExecuteAction.java` to correctly join the `department` table and retrieve `dept_name`.
+    - Updated `ListShift.jsp` to display the `dept_name` for each shift.
+    - User confirmed resolution of time display issue (`~`) and `deptName` display issue (`false`) on `user_home.jsp` after manual intervention and implied recompilation/re-deployment. The underlying cause was likely a build/deployment mismatch where an older, buggy version of `GetShiftsForMonthAction.class` was being used.
+
+- 2025-10-24: **Shift Display Fixes:**
+    - Fixed `ShiftListExecuteAction.java` to correctly join the `department` table and retrieve `dept_name`.
+    - Updated `ListShift.jsp` to display the `dept_name` for each shift.
+    - User confirmed resolution of time display issue (`~`) and `deptName` display issue (`false`) on `user_home.jsp` after manual intervention and implied recompilation/re-deployment. The underlying cause was likely a build/deployment mismatch where an older, buggy version of `GetShiftsForMonthAction.class` was being used.
+
+- 2025-10-24: **Responsive Design Reversion & Width Adjustment:**
+    - Reverted previous responsive design changes by deleting `WebContent/css/responsive.css` and removing its link from `WebContent/home/user_home.jsp`.
+    - Increased the `max-width` of the main `.container` in `WebContent/home/css/style.css` to `768px` to provide more horizontal space and prevent text wrapping issues (e.g., “処理一覧”).
+
+- 2025-10-24: **Implemented "Urgent Shift Request" / "掲示板" feature:**
+    - **Database Schema Update (SQL provided to user):** `shift.user_id` made nullable, `shift.status` enum updated with `'募集'`.
+    - **`ShiftDAO.java`:** Added `addShift`, `getOpenShifts`, `applyForShift` methods.
+    - **`DepartmentBean.java`:** Created.
+    - **`DepartmentDAO.java`:** Created.
+    - **`AddUrgentShiftAction.java`:** Created (admin action to add urgent shifts).
+    - **`add_urgent_shift.jsp`:** Created (admin form to add urgent shifts).
+    - **`ListUrgentShiftsAction.java`:** Created (admin action to list urgent shifts).
+    - **`list_urgent_shifts.jsp`:** Created (admin page to list urgent shifts).
+    - **`admin_home.jsp`:** Modified to include "掲示板" link and adjust layout to 2x2 grid (シフト管理, ユーザー管理 on row 1; 掲示板, お知らせ on row 2).
+    - **`WebContent/home/css/style.css`:** Modified for `admin-menu` layout.
+    - **`OpenShiftsAction.java`:** Updated to use `ShiftDAO.getOpenShifts()`.
+    - **`ApplyShiftExecuteAction.java`:** Updated to use `ShiftDAO.applyForShift()`.

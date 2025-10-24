@@ -14,77 +14,31 @@ public class ShiftBean {
     private Time endTime;
     private String status;
 
-    // Getters and Setters
+    // ===== Getter / Setter =====
+    public int getShiftId() { return shiftId; }
+    public void setShiftId(int shiftId) { this.shiftId = shiftId; }
 
-    public int getShiftId() {
-        return shiftId;
-    }
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-    public void setShiftId(int shiftId) {
-        this.shiftId = shiftId;
-    }
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    public int getUserId() {
-        return userId;
-    }
+    public int getDeptId() { return deptId; }
+    public void setDeptId(int deptId) { this.deptId = deptId; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public String getDeptName() { return deptName; }
+    public void setDeptName(String deptName) { this.deptName = deptName; }
 
-    public String getUserName() {
-        return userName;
-    }
+    public Date getShiftDate() { return shiftDate; }
+    public void setShiftDate(Date shiftDate) { this.shiftDate = shiftDate; }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public Time getStartTime() { return startTime; }
+    public void setStartTime(Time startTime) { this.startTime = startTime; }
 
-    public int getDeptId() {
-        return deptId;
-    }
+    public Time getEndTime() { return endTime; }
+    public void setEndTime(Time endTime) { this.endTime = endTime; }
 
-    public void setDeptId(int deptId) {
-        this.deptId = deptId;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public Date getShiftDate() {
-        return shiftDate;
-    }
-
-    public void setShiftDate(Date shiftDate) {
-        this.shiftDate = shiftDate;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public Time getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
