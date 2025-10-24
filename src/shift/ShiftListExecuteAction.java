@@ -58,13 +58,13 @@ public class ShiftListExecuteAction extends HttpServlet {
             request.setAttribute("shiftList", shiftList);
 
             // ✅ 修正：ShiftList フォルダに直接ある JSP へフォワード
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/ShiftList/List.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/shiftlist/ListShift.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "シフト一覧の取得中にエラーが発生しました：" + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/ShiftList/List.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/shiftlist/ListShift.jsp");
             dispatcher.forward(request, response);
         }
     }

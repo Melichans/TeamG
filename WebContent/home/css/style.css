@@ -429,6 +429,11 @@ footer p {
 
 }
 
+td.selected-day {
+    background-color: #e0f0ff;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+}
 
 
 

@@ -16,49 +16,36 @@ public class ShiftDAO {
         this.conn = conn;
     }
 
-    public void addShift(ShiftBean shift) throws SQLException {
-        String sql = "INSERT INTO shift (user_id, dept_id, shift_date, start_time, end_time, status, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    // 📅 特定の月のシフトリストを取得します
+    public List<ShiftBean> getShiftsByMonth(int userId, int year, int month) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, shift.getUserId());
-            ps.setInt(2, shift.getDeptId());
-            ps.setDate(3, shift.getShiftDate());
-            ps.setTime(4, shift.getStartTime());
-            ps.setTime(5, shift.getEndTime());
-            ps.setString(6, shift.getStatus());
-            ps.setTimestamp(7, shift.getCreatedAt());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new SQLException("シフト追加エラー: " + e.getMessage(), e);
-        }
-    }
-
-    public List<ShiftBean> getShiftsByUser(int userId) throws SQLException {
-        List<ShiftBean> shifts = new ArrayList<>();
-        String sql = "SELECT shift_id, user_id, dept_id, shift_date, start_time, end_time, status, created_at, approved_by " +
-                     "FROM shift WHERE user_id = ? ORDER BY shift_date";
+        String sql = """
+            SELECT s.shift_date, s.start_time, s.end_time, s.status, d.dept_name
+            FROM shift s
+            JOIN department d ON s.dept_id = d.dept_id
+            WHERE s.user_id = ?
+              AND YEAR(s.shift_date) = ?
+              AND MONTH(s.shift_date) = ?
+            ORDER BY s.shift_date ASC
+        """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                ShiftBean shift = new ShiftBean();
-                shift.setShiftId(rs.getInt("shift_id"));
-                shift.setUserId(rs.getInt("user_id"));
-                shift.setDeptId(rs.getInt("dept_id"));
-                shift.setShiftDate(rs.getDate("shift_date"));
-                shift.setStartTime(rs.getTime("start_time"));
-                shift.setEndTime(rs.getTime("end_time"));
-                shift.setStatus(rs.getString("status"));
-                shift.setCreatedAt(rs.getTimestamp("created_at"));
-                shift.setApprovedBy(rs.getInt("approved_by") == 0 ? null : rs.getInt("approved_by"));
-                shifts.add(shift);
+            ps.setInt(2, year);
+            ps.setInt(3, month);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ShiftBean s = new ShiftBean();
+                    s.setShiftDate(rs.getDate("shift_date"));
+                    s.setStartTime(rs.getTime("start_time"));
+                    s.setEndTime(rs.getTime("end_time"));
+                    s.setStatus(rs.getString("status"));
+                    s.setDeptName(rs.getString("dept_name"));
+                    list.add(s);
+                }
             }
-        } catch (SQLException e) {
-            throw new SQLException("シフトリスト取得エラー: " + e.getMessage(), e);
         }
-        return shifts;
+        return list;
     }
 }

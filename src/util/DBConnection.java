@@ -12,13 +12,13 @@ public class DBConnection {
 
     public static Connection getConnection() throws SQLException {
         try {
-            // Load MySQL driver (tùy chọn cho Java 8+, tự động load)
+            // MySQLドライバをロードします（Java 8以降はオプション、自動的にロードされます）
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC Driver không tìm thấy: " + e.getMessage(), e);
+            throw new SQLException("MySQL JDBC Driverが見つかりません： " + e.getMessage(), e);
         } catch (SQLException e) {
-            throw new SQLException("Lỗi kết nối MySQL: " + e.getMessage(), e);
+            throw new SQLException("MySQL接続エラー： " + e.getMessage(), e);
         }
     }
 }

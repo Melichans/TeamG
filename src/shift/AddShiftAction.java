@@ -24,7 +24,7 @@ public class AddShiftAction extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        // Lấy user từ session (giả định đã đăng nhập)
+        // セッションからユーザーを取得します（ログイン済みと仮定）
         UserBean user = (UserBean) request.getSession().getAttribute("user");
         if (user == null) {
             response.sendRedirect("loginAction");

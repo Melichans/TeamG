@@ -88,17 +88,17 @@
                 </div>
             <% } %>
 
-            <h2>Ca làm việc đang tuyển</h2>
+            <h2>募集中のシフト</h2>
             <div class="shift-table-container">
                 <table class="shift-table">
                     <thead>
                         <tr>
-                            <th>ID Ca</th>
-                            <th>Ngày</th>
-                            <th>Bắt đầu</th>
-                            <th>Kết thúc</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th>シフトID</th>
+                            <th>日付</th>
+                            <th>開始</th>
+                            <th>終了</th>
+                            <th>ステータス</th>
+                            <th>アクション</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,7 +116,7 @@
                                         <td>
                                             <form action="${pageContext.request.contextPath}/shift_manager/ApplyShiftExecuteAction" method="post">
                                                 <input type="hidden" name="shiftId" value="<%= shift.getShiftId() %>">
-                                                <button type="submit" class="apply-btn">Đăng ký</button>
+                                                <button type="submit" class="apply-btn">登録</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -124,7 +124,7 @@
                             } else {
                         %>
                                 <tr>
-                                    <td colspan="6">Không có ca làm việc nào đang tuyển.</td>
+                                    <td colspan="6">現在募集中のシフトはありません。</td>
                                 </tr>
                         <%  }
                         %>

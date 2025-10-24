@@ -38,11 +38,11 @@ public class ApplyShiftExecuteAction extends HttpServlet {
             // shiftDAO.applyForShift(shiftIdToApply, currentUser.getUserId());
             
             // For now, just redirect with a success message
-            response.sendRedirect(request.getContextPath() + "/shift_manager/OpenShiftsAction?message=Đăng ký ca làm việc thành công!");
+            response.sendRedirect(request.getContextPath() + "/shift_manager/OpenShiftsAction?message=シフトの登録が成功しました！");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi đăng ký ca làm việc: " + e.getMessage());
+            request.setAttribute("error", "シフト登録中にエラーが発生しました： " + e.getMessage());
             RequestDispatcher rd = request.getRequestDispatcher("/shift_manager/open_shifts.jsp");
             rd.forward(request, response);
         } catch (NumberFormatException e) {

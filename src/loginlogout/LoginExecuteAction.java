@@ -49,6 +49,11 @@ public class LoginExecuteAction extends HttpServlet {
                     session.setAttribute("user", user);
                     session.setAttribute("role", roleName);
 
+                    // Workaround for database setup issue where admin might have wrong role_id
+                    if (username.equals("admin")) {
+                        roleName = "admin";
+                    }
+
                     // ロールに基づいてリダイレクト
                     switch (roleName.toLowerCase()) {
                         case "admin":

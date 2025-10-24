@@ -46,7 +46,7 @@ public class OpenShiftsAction extends HttpServlet {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi tải danh sách ca làm việc đang tuyển: " + e.getMessage());
+            request.setAttribute("error", "募集中シフトのリスト読み込み中にエラーが発生しました： " + e.getMessage());
             RequestDispatcher rd = request.getRequestDispatcher("/shift_manager/open_shifts.jsp");
             rd.forward(request, response);
         }

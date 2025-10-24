@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/TeamG"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              driverClassName="com.mysql.cj.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/shift_ai_db?serverTimezone=Asia/Tokyo"
+              username="root"
+              password=""
+              maxActive="100"
+              maxIdle="30"
+              maxWait="10000" />
+</Context>

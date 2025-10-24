@@ -8,132 +8,225 @@
 <title>ホーム</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+    .shift-dot {
+        width: 5px;
+        height: 5px;
+        background-color: gray;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    td.has-shift {
+        position: relative;
+        cursor: pointer;
+    }
+    .shift-info {
+        display: none; /* Initially hidden */
+    }
+    td.selected-day {
+        border: 2px solid #007bff;
+        border-radius: 50%;
+    }
+</style>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- Header -->
-        <header>
-            <div class="header-icons">
-                <a href="#" class="icon"><i class="fa-solid fa-calendar-days"></i></a>
-                <a href="#" class="icon"><i class="fa-solid fa-users"></i></a>
+    <header>
+        <div class="header-icons">
+            <a href="#" class="icon"><i class="fa-solid fa-calendar-days"></i></a>
+            <a href="#" class="icon"><i class="fa-solid fa-users"></i></a>
+        </div>
+        <div class="calendar-nav">
+            <button id="prev-month" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            <div id="calendar-title" class="title"></div>
+            <button id="next-month" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="header-icons">
+            <a href="#" class="icon"><i class="fa-solid fa-clipboard-list"></i></a>
+        </div>
+    </header>
+
+    <main>
+        <section class="actions">
+            <button class="btn btn-checked"><i class="fa-solid fa-check"></i> 確認済み</button>
+            <button class="btn btn-submitted"><i class="fa-solid fa-file-arrow-up"></i> 提出済み</button>
+        </section>
+
+        <section class="calendar">
+            <table>
+                <thead>
+                    <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
+                </thead>
+                <tbody id="calendar-body">
+                </tbody>
+            </table>
+        </section>
+
+        <section class="shift-info" id="shift-info-section">
+            <div class="date" id="shift-info-date"></div>
+            <div id="shift-details-container"></div>
+            <div class="attendance-status">
+                <h3 class="status-title">現在出勤状況 <span class="live-indicator"></span></h3>
+                <ul class="worker-list">
+                    <li>田中</li>
+                    <li>村本</li>
+                    <li>佐々木</li>
+                </ul>
             </div>
-            <div class="calendar-nav">
-                <button id="prev-month" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
-                <div id="calendar-title" class="title"></div>
-                <button id="next-month" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-            <div class="header-icons">
-                <a href="#" class="icon"><i class="fa-solid fa-clipboard-list"></i></a>
-            </div>
-        </header>
+            <button class="btn btn-primary btn-add-shift"><i class="fa-solid fa-plus"></i> シフト設定</button>
+        </section>
+    </main>
+
+    <footer>
+        <nav>
+            <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item active"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
+            <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
+            <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item"><i class="fa-solid fa-bell"></i><span>通知</span></a>
+            <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="nav-item"><i class="fa-solid fa-user"></i><span>ログアウト</span></a>
+        </nav>
+    </footer>
+
+</div>
+
+<script>
+let currentDisplayedDate = new Date();
+const realToday = new Date();
+let monthShifts = [];
+let selectedCell = null;
+
+async function fetchShiftsForMonth(year, month) {
+    try {
+        const response = await fetch("<%= request.getContextPath() %>/shift/getShiftsForMonth?year=" + year + "&month=" + month);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        monthShifts = await response.json();
+        alert(monthShifts.length + " ca làm việc được tải."); // DEBUGGING ALERT
+    } catch (error) {
+        alert("Lỗi: Không thể tải dữ liệu ca làm việc. " + error); // DEBUGGING ALERT
+        console.error("Could not fetch shifts:", error);
+        monthShifts = [];
+    }
+}
+
+function renderCalendar(year, month) {
+    const calendarBody = document.getElementById('calendar-body');
+    const calendarTitle = document.getElementById('calendar-title');
     
-        <main>
-            <!-- Actions -->
-            <section class="actions">
-                <button class="btn btn-checked"><i class="fa-solid fa-check"></i> 確認済み</button>
-                <button class="btn btn-submitted"><i class="fa-solid fa-file-arrow-up"></i> 提出済み</button>
-            </section>
+    calendarTitle.textContent = year + '年' + (month + 1) + '月';
+    calendarBody.innerHTML = '';
+    if (selectedCell) {
+        selectedCell.classList.remove('selected-day');
+        selectedCell = null;
+    }
+
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
     
-            <!-- Calendar -->
-            <section class="calendar">
-                <table>
-                    <thead>
-                        <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
-                    </thead>
-                    <tbody id="calendar-body">
-                        <!-- Calendar days will be generated by JavaScript -->
-                    </tbody>
-                </table>
-            </section>
-    
-                    <!-- Shift Info -->
-                    <section class="shift-info">
-                        <div class="date">9月10日(木曜日)</div>
-                        <div class="shift-details">
-                            <p class="time"><i class="fa-regular fa-clock"></i> 11:00 ～ 16:00</p>
-                            <p class="section"><i class="fa-solid fa-utensils"></i> キッチン</p>
-                        </div>
-                        <div class="attendance-status">
-                            <h3 class="status-title">現在出勤状況 <span class="live-indicator"></span></h3>
-                            <ul class="worker-list">
-                                <li>田中</li>
-                                <li>村本</li>
-                                <li>佐々木</li>
-                            </ul>
-                        </div>
-                        <button class="btn btn-primary btn-add-shift"><i class="fa-solid fa-plus"></i> シフト設定</button>
-                    </section>
-            
-                        </main>        <!-- Footer -->
-        <footer>
-            <nav>
-                            <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item active"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
-                            <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
-                            <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item"><i class="fa-solid fa-bell"></i><span>通知</span></a>
-                            <a href="${pageContext.request.contextPath}/loginlogout/logoutAction" class="nav-item"><i class="fa-solid fa-user"></i><span>ログアウト</span></a>            </nav>
-        </footer>
-    
-    </div>
-    
-    <script>
-    let currentDisplayedDate = new Date();
-    const realToday = new Date(); // Store the actual today date
-    
-    function generateCalendar(year, month) {
-        const calendarBody = document.getElementById('calendar-body');
-        const calendarTitle = document.getElementById('calendar-title');
-        
-        calendarTitle.textContent = year + '年' + (month + 1) + '月';
-        calendarBody.innerHTML = ''; // Clear previous calendar
-    
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
-        let date = 1;
-        for (let i = 0; i < 6; i++) {
-            let row = document.createElement('tr');
-            for (let j = 0; j < 7; j++) {
-                let cell = document.createElement('td');
-                if (i === 0 && j < firstDayOfMonth) {
-                    // Empty cell
-                } else if (date > daysInMonth) {
-                    // Empty cell
-                } else {
-                    cell.textContent = date;
-                    if (date === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
-                        cell.classList.add('today');
-                    }
-                    date++;
+    const shiftDates = monthShifts.map(s => new Date(s.shiftDate + 'T00:00:00').getDate());
+
+    let date = 1;
+    for (let i = 0; i < 6; i++) {
+        let row = document.createElement('tr');
+        for (let j = 0; j < 7; j++) {
+            let cell = document.createElement('td');
+            if (i === 0 && j < firstDayOfMonth) {
+                // Empty cell
+            } else if (date > daysInMonth) {
+                // Empty cell
+            } else {
+                cell.textContent = date;
+                const currentDate = new Date(year, month, date);
+                const dateStr = currentDate.toISOString().split('T')[0];
+
+                if (shiftDates.includes(date)) {
+                    cell.classList.add('has-shift');
+                    const dot = document.createElement('div');
+                    dot.className = 'shift-dot';
+                    cell.appendChild(dot);
+                    
+                    cell.addEventListener('click', () => {
+                        if (selectedCell) {
+                            selectedCell.classList.remove('selected-day');
+                        }
+                        cell.classList.add('selected-day');
+                        selectedCell = cell;
+                        displayShiftInfo(dateStr);
+                    });
                 }
-                row.appendChild(cell);
+
+                if (date === realToday.getDate() && month === realToday.getMonth() && year === realToday.getFullYear()) {
+                    cell.classList.add('today');
+                }
+                date++;
             }
-            calendarBody.appendChild(row);
-            if (date > daysInMonth) {
-                break;
-            }
+            row.appendChild(cell);
+        }
+        calendarBody.appendChild(row);
+        if (date > daysInMonth) {
+            break;
         }
     }
-    
-    function setupCalendarNavigation() {
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() - 1);
-            generateCalendar(currentDisplayedDate.getFullYear(), currentDisplayedDate.getMonth());
-        });
-    
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() + 1);
-            generateCalendar(currentDisplayedDate.getFullYear(), currentDisplayedDate.getMonth());
-        });
-    }
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        generateCalendar(currentDisplayedDate.getFullYear(), currentDisplayedDate.getMonth());
-        setupCalendarNavigation();
-    });
-    </script>
-    </body>
-    </html>
-    
+}
+
+function displayShiftInfo(dateStr) {
+    const shiftsForDay = monthShifts.filter(s => s.shiftDate === dateStr);
+    const infoSection = document.getElementById('shift-info-section');
+    const dateDisplay = document.getElementById('shift-info-date');
+    const detailsContainer = document.getElementById('shift-details-container');
+
+    if (shiftsForDay.length > 0) {
+        const dateObj = new Date(dateStr + 'T00:00:00');
+        const week = ['日', '月', '火', '水', '木', '金', '土'];
+        dateDisplay.textContent = `${dateObj.getMonth() + 1}月${dateObj.getDate()}日(${week[dateObj.getDay()]}曜日)`;
         
+        detailsContainer.innerHTML = '';
+        shiftsForDay.forEach(shift => {
+            const shiftDiv = document.createElement('div');
+            shiftDiv.className = 'shift-details';
+            shiftDiv.innerHTML = `
+                <p class="time"><i class="fa-regular fa-clock"></i> ${shift.startTime.substring(0,5)} ～ ${shift.endTime.substring(0,5)}</p>
+                <p class="section"><i class="fa-solid fa-utensils"></i> ${shift.deptName}</p>
+            `;
+            detailsContainer.appendChild(shiftDiv);
+        });
+
+        infoSection.style.display = 'block';
+    } else {
+        infoSection.style.display = 'none';
+    }
+}
+
+async function updateCalendar() {
+    const year = currentDisplayedDate.getFullYear();
+    const month = currentDisplayedDate.getMonth();
+    await fetchShiftsForMonth(year, month);
+    renderCalendar(year, month);
+    // Hide shift info when calendar updates
+    document.getElementById('shift-info-section').style.display = 'none'; 
+}
+
+function setupCalendarNavigation() {
+    document.getElementById('prev-month').addEventListener('click', () => {
+        currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() - 1);
+        updateCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+        currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() + 1);
+        updateCalendar();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateCalendar();
+    setupCalendarNavigation();
+});
+</script>
+</body>
+</html>

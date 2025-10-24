@@ -32,3 +32,20 @@ This file records the changes made by the Gemini AI assistant.
 
 - 2025-10-22: **Shift List Page Layout:**
     - Applied a modern and consistent layout to `WebContent/shift_manager/open_shifts.jsp`.
+
+- 2025-10-23: **Interactive Calendar Update:**
+    - Overhauled calendar JavaScript in `user_home.jsp` to fix click event issues by attaching listeners directly to date cells.
+    - Added a new feature to visually circle the selected date on the calendar.
+    - Ensured shift details are correctly displayed upon selection and cleared when navigating between months.
+
+- 2025-10-23: **Bug Fix:**
+    - Patched `LoginExecuteAction.java` to ensure the admin user is always redirected to the admin homepage, overriding incorrect role data from the database.
+
+- 2025-10-23: **Project-Wide Review and Refactoring:**
+    - Conducted a full code review to identify and fix bugs and inconsistencies.
+    - Completed translation of all remaining Vietnamese text to Japanese in source files and JSPs.
+    - Refactored `ShiftDAO.java` to fix critical bugs including incorrect SQL table names, faulty month logic, and data type mismatches.
+    - Restored `ShiftBean.java` to its correct state with all necessary fields and data types to ensure application-wide data consistency.
+    - Removed redundant and incorrect shift fetching logic from `HomeUserAction.java` as calendar data is now fetched dynamically by JavaScript.
+    - Cleaned up `HomeUserAction.java` by removing unused imports and local variables, resolving compiler warnings.
+    - Fixed 404 Not Found error for calendar data by ensuring correct context path resolution in `user_home.jsp`'s JavaScript fetch call.

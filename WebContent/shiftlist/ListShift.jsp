@@ -34,7 +34,7 @@
   </div>
 
   <div class="nav-buttons">
-    <button onclick="location.href='<%=request.getContextPath()%>/home.jsp'">🏠 ホームへ</button>
+    <button onclick="location.href='<%=request.getContextPath()%>/home/user_home.jsp'">🏠 ホームへ</button>
     <button onclick="location.href='<%=request.getContextPath()%>/shift/AutoShiftAction'">⚙️ シフト自動生成</button>
     <button onclick="location.href='<%=request.getContextPath()%>/menu.jsp'">📋 メニューへ</button>
   </div>
