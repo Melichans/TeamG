@@ -70,7 +70,7 @@ public class AddUrgentShiftAction extends HttpServlet {
 
             try (Connection conn = DBConnection.getConnection()) {
                 ShiftDAO shiftDAO = new ShiftDAO(conn);
-                shiftDAO.addShift(shift);
+                shiftDAO.addOpenShift(shift);
                 request.setAttribute("success", "緊急シフトが正常に追加されました。");
                 request.getRequestDispatcher("/admin/add_urgent_shift.jsp").forward(request, response);
             } catch (SQLException e) {

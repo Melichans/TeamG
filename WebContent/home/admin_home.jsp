@@ -37,9 +37,9 @@
 
             <!-- Menu -->
             <section class="admin-menu">
-                <a href="${pageContext.request.contextPath}/shift_list.jsp" class="menu-item">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>シフト管理</span>
+                <a href="${pageContext.request.contextPath}/admin/ListSubmittedShiftsAction" class="menu-item">
+                    <i class="fa-solid fa-inbox"></i>
+                    <span>シフト提出確認</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/user_list.jsp" class="menu-item">
                     <i class="fa-solid fa-users-cog"></i>

@@ -13,6 +13,7 @@ public class ShiftBean {
     private Time startTime;
     private Time endTime;
     private String status;
+    private String memo;
 
     // ===== Getter / Setter =====
     public int getShiftId() { return shiftId; }
@@ -41,4 +42,7 @@ public class ShiftBean {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getMemo() { return memo; }
+    public void setMemo(String memo) { this.memo = memo; }
 }

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import bean.AccountBean;
 import bean.UserBean;
 import dao.AccountDAO;
+import dao.UserDAO;
 
 @WebServlet("/mypage/myPage")
 public class MyPageAction extends HttpServlet {
@@ -26,7 +27,7 @@ public class MyPageAction extends HttpServlet {
 
         if (user == null) {
             // If user is not logged in, redirect to login page
-            response.sendRedirect(request.getContextPath() + "/loginlogout/css/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/loginlogout/login.jsp");
             return;
         }
 
@@ -46,7 +47,7 @@ public class MyPageAction extends HttpServlet {
                 // If fullUser is null, it means the user's account ID from session is invalid or user data is missing.
                 // Invalidate session and redirect to login or an error page.
                 session.invalidate();
-                response.sendRedirect(request.getContextPath() + "/loginlogout/css/login.jsp?error=invalidUserSession");
+                response.sendRedirect(request.getContextPath() + "/loginlogout/login.jsp?error=invalidUserSession");
                 return;
             }
             request.setAttribute("account", account);

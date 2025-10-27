@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>SSAI ログイン</title>
+    <title>SSAIグイン</title>
     <style>
         body { 
             font-family: 'Yu Gothic', sans-serif; 

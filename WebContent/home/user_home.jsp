@@ -82,18 +82,14 @@
                     <li>佐々木</li>
                 </ul>
             </div>
-            <button class="btn btn-primary btn-add-shift"><i class="fa-solid fa-plus"></i> シフト設定</button>
         </section>
     </main>
 
-    <footer>
-        <nav>
-            <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="nav-item active"><i class="fa-solid fa-calendar-alt"></i><span>シフト</span></a>
-            <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="nav-item"><i class="fa-solid fa-list-check"></i><span>処理一覧</span></a>
-            <a href="${pageContext.request.contextPath}/noticafition/noticeList" class="nav-item"><i class="fa-solid fa-bell"></i><span>通知</span></a>
-            <a href="${pageContext.request.contextPath}/mypage/my_page.jsp" class="nav-item active"><i class="fa-solid fa-user"></i><span>マイページ</span></a>
-        </nav>
-    </footer>
+    <section class="submit-shift-section" style="padding: 0 20px 20px 20px;">
+        <button onclick="location.href='${pageContext.request.contextPath}/shift/AddShiftAction'" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1em;"><i class="fa-solid fa-plus"></i> シフト提出</button>
+    </section>
+
+    <%@ include file="../menu/menu.jsp" %>
 
 </div>
 

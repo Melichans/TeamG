@@ -51,13 +51,13 @@ public class BoardServlet extends HttpServlet {
         }
 
         // 投稿後に掲示板ページにリダイレクト
-        response.sendRedirect("board.jsp");
+        response.sendRedirect("noticafition/board.jsp");
     }
 
     // GETリクエストは掲示板ページにリダイレクト
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("board.jsp");
+        response.sendRedirect("noticafition/board.jsp");
     }
 }
 
