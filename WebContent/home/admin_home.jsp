@@ -55,6 +55,12 @@
                         <span>お知らせ追加</span>
                     </a>
                 </div>
+                <div class="admin-menu-row">
+                    <a href="${pageContext.request.contextPath}/admin/AffiliatedStoresAction" class="menu-item">
+                        <i class="fa-solid fa-store"></i>
+                        <span>系列店一覧</span>
+                    </a>
+                </div>
             </section>
         </main>
 

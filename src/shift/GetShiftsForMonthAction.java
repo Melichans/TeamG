@@ -69,7 +69,7 @@ public class GetShiftsForMonthAction extends HttpServlet {
             // 🧠 DAOを呼び出し
             try (Connection conn = getConnection()) {
                 ShiftDAO dao = new ShiftDAO(conn);
-                List<ShiftBean> shifts = dao.getShiftsByMonth(user.getUserId(), year, month);
+                List<ShiftBean> shifts = dao.getShiftsByMonthAndStatus(user.getUserId(), year, month, "確認済み");
 
                 JSONArray jsonArr = new JSONArray();
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");

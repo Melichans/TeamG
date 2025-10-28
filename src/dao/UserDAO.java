@@ -54,12 +54,13 @@ public class UserDAO {
         return user;
     }
 
-    public void updateUserSettings(int userId, boolean notificationsEnabled) throws SQLException {
-        String sql = "UPDATE user SET push_notifications_enabled = ? WHERE user_id = ?";
+    public void updateUserSettings(int userId, boolean notificationsEnabled, String language) throws SQLException {
+        String sql = "UPDATE user SET push_notifications_enabled = ?, language = ? WHERE user_id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setBoolean(1, notificationsEnabled);
-            ps.setInt(2, userId);
+            ps.setString(2, language);
+            ps.setInt(3, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Error updating user settings: " + e.getMessage(), e);

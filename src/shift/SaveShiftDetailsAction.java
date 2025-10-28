@@ -43,9 +43,12 @@ public class SaveShiftDetailsAction extends HttpServlet {
         String endTimeMinuteStr = request.getParameter("endTimeMinute");
         String memo = request.getParameter("memo");
 
-        // Hidden fields for redirection
         String periodStartDateStr = request.getParameter("periodStartDate");
         String periodEndDateStr = request.getParameter("periodEndDate");
+
+        // Ensure parameters are not null to prevent issues in the redirect URL
+        if (periodStartDateStr == null) periodStartDateStr = "";
+        if (periodEndDateStr == null) periodEndDateStr = "";
 
         String redirectUrl = request.getContextPath() + "/shift/EnterShiftsAction?startDate=" + periodStartDateStr + "&endDate=" + periodEndDateStr;
 

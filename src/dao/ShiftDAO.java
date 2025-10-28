@@ -182,7 +182,7 @@ public class ShiftDAO {
         return list;
     }
 
-    public List<ShiftBean> getUserShiftsByPeriod(int userId, java.time.LocalDate periodStartDate, java.time.LocalDate periodEndDate) throws SQLException {
+    public List<ShiftBean> getShiftsForUserBetweenDates(int userId, java.time.LocalDate periodStartDate, java.time.LocalDate periodEndDate) throws SQLException {
         List<ShiftBean> list = new ArrayList<>();
         String sql = "SELECT s.shift_id, s.user_id, s.dept_id, d.dept_name, s.shift_date, s.start_time, s.end_time, s.status, s.memo " +
                      "FROM `shift` s " +
@@ -263,6 +263,39 @@ public class ShiftDAO {
                 insertPs.executeUpdate();
             }
         }
+        return list;
+    }
+
+    public List<ShiftBean> getShiftsByMonthAndStatus(int userId, int year, int month, String status) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
+        String sql = "SELECT shift_id, user_id, dept_id, shift_date, start_time, end_time, status, memo FROM `shift` " +
+                     "WHERE user_id = ? AND YEAR(shift_date) = ? AND MONTH(shift_date) = ? AND status = ? " +
+                     "ORDER BY shift_date ASC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, year);
+            ps.setInt(3, month);
+            ps.setString(4, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ShiftBean s = new ShiftBean();
+                    s.setShiftId(rs.getInt("shift_id"));
+                    s.setUserId(rs.getInt("user_id"));
+                    s.setDeptId(rs.getInt("dept_id"));
+                    s.setShiftDate(rs.getDate("shift_date"));
+                    s.setStartTime(rs.getTime("start_time"));
+                    s.setEndTime(rs.getTime("end_time"));
+                    s.setStatus(rs.getString("status"));
+                    s.setMemo(rs.getString("memo"));
+                    list.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.getShiftsByMonthAndStatus エラー: " + e.getMessage(), e);
+        }
+        return list;
     }
 
     /**
@@ -283,38 +316,16 @@ public class ShiftDAO {
             throw new SQLException("ShiftDAO.applyForShift エラー: " + e.getMessage(), e);
         }
     }
-    public void addShift(ShiftBean shift) throws SQLException {
-        String sql = "INSERT INTO shift (user_id, dept_id, shift_date, start_time, end_time, status) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, shift.getUserId());
-            ps.setInt(2, shift.getDeptId());
-            ps.setDate(3, shift.getShiftDate());
-            ps.setTime(4, shift.getStartTime());
-            ps.setTime(5, shift.getEndTime());
-            ps.setString(6, shift.getStatus());
-            ps.executeUpdate();
-        }
-    }
-    public List<ShiftBean> getShiftsForUserBetweenDates(int userId, LocalDate start, LocalDate end) throws SQLException {
-        List<ShiftBean> list = new ArrayList<>();
-        String sql = "SELECT * FROM shift WHERE user_id = ? AND shift_date BETWEEN ? AND ? ORDER BY shift_date";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setDate(2, java.sql.Date.valueOf(start));
-            ps.setDate(3, java.sql.Date.valueOf(end));
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ShiftBean s = new ShiftBean();
-                    s.setShiftDate(rs.getDate("shift_date"));
-                    s.setDeptId(rs.getInt("dept_id"));
-                    s.setStartTime(rs.getTime("start_time"));
-                    s.setEndTime(rs.getTime("end_time"));
-                    s.setStatus(rs.getString("status"));
-                    list.add(s);
-                }
-            }
-        }
-        return list;
-    }
 
+    public void updateShiftStatus(int shiftId, String newStatus) throws SQLException {
+        String sql = "UPDATE `shift` SET status = ? WHERE shift_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, shiftId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.updateShiftStatus エラー: " + e.getMessage(), e);
+        }
+    }
 }

@@ -58,7 +58,7 @@
     <main>
         <section class="actions">
             <button class="btn btn-checked"><i class="fa-solid fa-check"></i> 確認済み</button>
-            <button class="btn btn-submitted"><i class="fa-solid fa-file-arrow-up"></i> 提出済み</button>
+            <button onclick="location.href='${pageContext.request.contextPath}/shift/SubmittedCalendarAction'" class="btn btn-submitted"><i class="fa-solid fa-file-arrow-up"></i> 提出済み</button>
         </section>
 
         <section class="calendar">

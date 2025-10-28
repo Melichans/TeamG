@@ -31,8 +31,8 @@ public class EditDayAction extends HttpServlet {
             request.setAttribute("displayDate", date.format(dateFormatter));
             request.setAttribute("rawDate", date.toString()); // Pass the raw date for the form
          // Lấy dữ liệu từ request (hoặc gán tạm thời nếu chưa có)
-            String startDateStr = request.getParameter("startDate");
-            String endDateStr = request.getParameter("endDate");
+            String startDateStr = request.getParameter("periodStartDate");
+            String endDateStr = request.getParameter("periodEndDate");
 
             // Nếu null thì gán giá trị mặc định để tránh lỗi null
             if (startDateStr == null) startDateStr = "";

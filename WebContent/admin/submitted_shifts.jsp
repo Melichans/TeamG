@@ -81,7 +81,7 @@
                                         <td><%= shift.getDeptName() %></td>
                                         <td><span class="status-submitted"><%= shift.getStatus() %></span></td>
                                         <td class="action-buttons">
-                                            <a href="#" class="btn-approve">承認</a>
+                                            <a href="${pageContext.request.contextPath}/admin/ApproveShiftAction?shiftId=<%= shift.getShiftId() %>" class="btn-approve">承認</a>
                                             <a href="#" class="btn-reject">拒否</a>
                                         </td>
                                     </tr>

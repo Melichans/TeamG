@@ -119,7 +119,7 @@ CREATE TABLE `notice` (
 
 LOCK TABLES `notice` WRITE;
 /*!40000 ALTER TABLE `notice` DISABLE KEYS */;
-INSERT INTO `notice` VALUES (1,'a','a','2025-10-23 14:34:12',0);
+INSERT INTO `notice` VALUES (1,'a','a','2025-10-23 14:34:12',1);
 /*!40000 ALTER TABLE `notice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,14 +157,15 @@ DROP TABLE IF EXISTS `shift`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `shift` (
   `shift_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `shift_date` date NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
-  `status` enum('未提出','提出済み','確認済み','拒否') DEFAULT '未提出',
+  `status` enum('未提出','提出済み','確認済み','拒否','募集') DEFAULT '未提出',
   `dept_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `approved_by` int(11) DEFAULT NULL,
+  `memo` text DEFAULT NULL,
   PRIMARY KEY (`shift_id`),
   KEY `user_id` (`user_id`),
   KEY `fk_shift_department` (`dept_id`),
@@ -172,7 +173,7 @@ CREATE TABLE `shift` (
   CONSTRAINT `fk_shift_approved_by` FOREIGN KEY (`approved_by`) REFERENCES `user` (`user_id`),
   CONSTRAINT `fk_shift_department` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`),
   CONSTRAINT `shift_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,7 +182,7 @@ CREATE TABLE `shift` (
 
 LOCK TABLES `shift` WRITE;
 /*!40000 ALTER TABLE `shift` DISABLE KEYS */;
-INSERT INTO `shift` VALUES (1,2,'2025-10-10','09:00:00','15:00:00','提出済み',1,'2025-10-22 04:15:22',NULL),(2,3,'2025-10-11','12:00:00','20:00:00','確認済み',1,'2025-10-22 04:15:22',NULL),(3,2,'2025-10-10','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(4,2,'2025-10-11','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(5,2,'2025-10-12','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(6,2,'2025-10-13','12:00:00','20:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(7,2,'2025-10-14','12:00:00','20:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(8,2,'2025-10-17','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(9,2,'2025-10-18','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(10,2,'2025-10-19','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL),(11,3,'2025-10-10','10:00:00','18:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(12,3,'2025-10-11','10:00:00','18:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(13,3,'2025-10-12','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(14,3,'2025-10-13','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(15,3,'2025-10-14','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(16,3,'2025-10-15','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(17,3,'2025-10-16','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL),(18,3,'2025-10-17','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL);
+INSERT INTO `shift` VALUES (1,2,'2025-10-10','09:00:00','15:00:00','提出済み',1,'2025-10-22 04:15:22',NULL,NULL),(2,3,'2025-10-11','12:00:00','20:00:00','確認済み',1,'2025-10-22 04:15:22',NULL,NULL),(4,2,'2025-10-11','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(5,2,'2025-10-12','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(6,2,'2025-10-13','12:00:00','20:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(7,2,'2025-10-14','12:00:00','20:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(8,2,'2025-10-17','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(9,2,'2025-10-18','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(10,2,'2025-10-19','10:00:00','18:00:00','提出済み',2,'2025-10-23 01:01:18',NULL,NULL),(11,3,'2025-10-10','10:00:00','18:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(12,3,'2025-10-11','10:00:00','18:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(13,3,'2025-10-12','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(14,3,'2025-10-13','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(15,3,'2025-10-14','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(16,3,'2025-10-15','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(17,3,'2025-10-16','14:00:00','22:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(18,3,'2025-10-17','12:00:00','20:00:00','提出済み',3,'2025-10-23 01:01:18',NULL,NULL),(21,3,'2025-12-03','07:00:00','21:00:00','提出済み',1,'2025-10-28 02:48:18',NULL,''),(22,3,'2025-12-04','07:00:00','21:00:00','提出済み',1,'2025-10-28 02:54:00',NULL,''),(23,3,'2025-12-06','07:00:00','21:00:00','提出済み',1,'2025-10-28 02:54:04',NULL,''),(24,3,'2025-12-05','07:00:00','21:00:00','提出済み',4,'2025-10-28 02:54:29',NULL,''),(25,3,'2025-12-11','07:00:00','21:00:00','提出済み',1,'2025-10-28 03:05:54',NULL,''),(26,3,'2025-12-13','14:00:00','17:00:00','提出済み',1,'2025-10-28 03:06:00',NULL,'');
 /*!40000 ALTER TABLE `shift` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,6 +203,8 @@ CREATE TABLE `user` (
   `email` varchar(100) DEFAULT NULL,
   `joined_date` date DEFAULT curdate(),
   `company_id` int(11) NOT NULL,
+  `push_notifications_enabled` tinyint(1) DEFAULT 1 COMMENT 'プッシュ通知が有効かどうかのフラグ',
+  `language` varchar(10) DEFAULT 'ja' COMMENT 'ユーザーが選択した言語 (e.g., ja, en)',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email_unique` (`email`),
   KEY `account_id` (`account_id`),
@@ -217,7 +220,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,1,'管理者 太郎','男性','ADMIN','080-0000-0000','admin@example.com','2025-10-20',1),(2,2,'山田 花子','女性','アルバイト','080-1111-1111','yamada@example.com','2025-10-20',1),(3,3,'田中 一郎','男性','リーダー','080-2222-2222','tanaka@example.com','2025-10-20',1);
+INSERT INTO `user` VALUES (1,1,'管理者 太郎','男性','ADMIN','080-0000-0000','admin@example.com','2025-10-20',1,1,'ja'),(2,2,'山田 花子','女性','アルバイト','080-1111-1111','yamada@example.com','2025-10-20',1,1,'ja'),(3,3,'田中 一郎','男性','リーダー','080-2222-2222','tanaka@example.com','2025-10-20',1,1,'ja');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +267,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-24 10:57:31
+-- Dump completed on 2025-10-28 12:36:29

@@ -63,25 +63,39 @@ public class EnterShiftsAction extends HttpServlet {
             List<Map<String, Object>> dayList = new ArrayList<>();
             LocalDate current = startDate;
             DateTimeFormatter displayFmt = DateTimeFormatter.ofPattern("M/d(E)", Locale.JAPANESE);
+
             while (!current.isAfter(endDate)) {
                 Map<String, Object> day = new HashMap<>();
                 String key = current.format(dateKeyFmt);
                 day.put("date", key);
                 day.put("label", current.format(displayFmt));
-                day.put("hasShift", shiftMap.containsKey(key)); // ✅ ここ重要
+                day.put("shift", shiftMap.get(key)); // Pass the whole ShiftBean or null
                 dayList.add(day);
                 current = current.plusDays(1);
             }
 
+            // ✅ debug ngay sau khi danh sách được tạo xong
+            System.out.println("[DEBUG EnterShiftsAction] startDateStr=" + startDateStr);
+            System.out.println("[DEBUG EnterShiftsAction] endDateStr=" + endDateStr);
+            System.out.println("[DEBUG EnterShiftsAction] dayList size=" + dayList.size());
+            if (!dayList.isEmpty()) {
+                System.out.println("[DEBUG EnterShiftsAction] first day = " + dayList.get(0).get("date"));
+                System.out.println("[DEBUG EnterShiftsAction] last day = " + dayList.get(dayList.size() - 1).get("date"));
+            }
+
+            // rồi sau đó mới set attribute
             request.setAttribute("dayList", dayList);
             request.setAttribute("periodStartDate", startDateStr);
             request.setAttribute("periodEndDate", endDateStr);
 
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "シフト一覧取得中にエラーが発生しました: " + e.getMessage());
+            // Pass the detailed error message to the JSP for debugging
+            String detailedError = "エラー発生: " + e.toString();
+            request.setAttribute("detailedError", detailedError);
         }
-
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher("/addshift/enter_shifts.jsp");
         dispatcher.forward(request, response);
     }

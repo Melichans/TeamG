@@ -59,7 +59,7 @@
                         <p style="font-size: 1.3em; font-weight: bold; color: #333;"><%= request.getAttribute("displayDate") %></p>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="position-group">
                         <label for="store">勤務ポジション</label>
                         <select id="store" name="deptId">
                             <% 
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="time-group">
                         <label>希望勤務時間</label>
                         <div class="time-select-group">
                             <select name="startTimeHour">
@@ -121,5 +121,32 @@
 
         <%@ include file="../menu/menu.jsp" %>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const prefWork = document.getElementById('pref_work');
+            const prefRest = document.getElementById('pref_rest');
+            
+            const positionGroup = document.getElementById('position-group');
+            const timeGroup = document.getElementById('time-group');
+
+            function toggleWorkFields() {
+                if (prefRest.checked) {
+                    positionGroup.style.display = 'none';
+                    timeGroup.style.display = 'none';
+                } else {
+                    positionGroup.style.display = 'block';
+                    timeGroup.style.display = 'block';
+                }
+            }
+
+            // Add event listeners
+            prefWork.addEventListener('change', toggleWorkFields);
+            prefRest.addEventListener('change', toggleWorkFields);
+
+            // Initial check on page load
+            toggleWorkFields();
+        });
+    </script>
 </body>
 </html>
