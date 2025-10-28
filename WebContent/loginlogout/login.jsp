@@ -27,7 +27,7 @@
             margin-bottom: 20px;
             text-align: left;
         }
-        .form-group label 
+        .form-group label {
             display: block;
             margin-bottom: 5px;
             color: #555;
