@@ -71,4 +71,4 @@ public class ShiftListExecuteAction extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
-
+}
