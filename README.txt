@@ -2,6 +2,8 @@ Project: Shift_AI
 
 This file records the changes made by the Gemini AI assistant.
 
+- 2025-10-29: Created `add_sample_open_shifts.sql` to add sample data for the bulletin board (掲示板).
+
 - 2025-10-21: Created this README.txt file to track project modifications.
 - 2025-10-21: Modified `UserBean.java` to include `username` and `roleName` fields.
 - 2025-10-21: Fixed database schema mismatch in `UserListServlet.java` and updated `users.jsp` to display correct user information.

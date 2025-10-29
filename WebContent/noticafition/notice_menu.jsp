@@ -56,7 +56,7 @@
                     class="menu-item"> <i class="fa-solid fa-bullhorn"></i>
                     <span>お知らせ</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/shift_manager/open_shifts.jsp" class="menu-item">
+                <a href="${pageContext.request.contextPath}/shift_manager/OpenShiftsAction" class="menu-item">
                     <i class="fa-solid fa-clipboard-list"></i> <span>掲示板</span>
                 </a>
             </section>

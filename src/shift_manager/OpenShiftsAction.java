@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +22,8 @@ import util.DBConnection;
 public class OpenShiftsAction extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	System.out.println("[DEBUG] === OpenShiftsAction START ===");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/loginlogout/loginAction");
@@ -39,6 +42,11 @@ public class OpenShiftsAction extends HttpServlet {
             // Placeholder: Fetch all shifts for now, or implement getOpenShifts in ShiftDAO
             // For now, let's just pass an empty list or a dummy list
             List<ShiftBean> openShifts = shiftDAO.getOpenShifts(); // Replace with actual data fetching
+            System.out.println("[DEBUG] === getOpenShifts called ===");
+            System.out.println("[DEBUG] openShifts size = " + openShifts.size());
+            for (ShiftBean s : openShifts) {
+                System.out.println("  -> ID=" + s.getShiftId() + ", date=" + s.getShiftDate() + ", dept=" + s.getDeptId());
+            }
 
             request.setAttribute("openShifts", openShifts);
             RequestDispatcher rd = request.getRequestDispatcher("/shift_manager/open_shifts.jsp");

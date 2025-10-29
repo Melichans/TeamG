@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +123,7 @@ public class ShiftDAO {
         String sql = "SELECT s.shift_id, s.user_id, s.dept_id, s.shift_date, s.start_time, s.end_time, s.status, d.dept_name " +
                      "FROM `shift` s " +
                      "LEFT JOIN department d ON s.dept_id = d.dept_id " +
-                     "WHERE s.user_id IS NULL AND s.status = '募集' " +
+                     "WHERE s.status = '募集' AND s.shift_date >= CURDATE() " +  // ← chỉ lọc trạng thái & ngày
                      "ORDER BY s.shift_date ASC, s.start_time ASC";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -132,7 +131,6 @@ public class ShiftDAO {
                 while (rs.next()) {
                     ShiftBean s = new ShiftBean();
                     s.setShiftId(rs.getInt("shift_id"));
-                    // user_id will be null for open shifts, so we don't set it here
                     s.setDeptId(rs.getInt("dept_id"));
                     s.setShiftDate(rs.getDate("shift_date"));
                     s.setStartTime(rs.getTime("start_time"));
@@ -148,6 +146,7 @@ public class ShiftDAO {
         }
         return list;
     }
+
 
     public List<ShiftBean> getShiftsByStatus(String status) throws SQLException {
         List<ShiftBean> list = new ArrayList<>();
@@ -263,7 +262,6 @@ public class ShiftDAO {
                 insertPs.executeUpdate();
             }
         }
-        return list;
     }
 
     public List<ShiftBean> getShiftsByMonthAndStatus(int userId, int year, int month, String status) throws SQLException {

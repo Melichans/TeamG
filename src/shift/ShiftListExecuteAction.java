@@ -29,12 +29,13 @@ public class ShiftListExecuteAction extends HttpServlet {
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String sql = "SELECT s.shift_id, s.user_id, s.dept_id, d.dept_name, s.shift_date, "
-                       + "s.start_time, s.end_time, s.status, u.user_name "
-                       + "FROM shift s "
-                       + "JOIN users u ON s.user_id = u.user_id "
-                       + "JOIN department d ON s.dept_id = d.dept_id "
-                       + "ORDER BY s.shift_date ASC, s.start_time ASC";
+        	String sql = "SELECT s.shift_id, s.user_id, s.dept_id, d.dept_name, s.shift_date, "
+        	           + "s.start_time, s.end_time, s.status, u.user_name "
+        	           + "FROM shift s "
+        	           + "JOIN user u ON s.user_id = u.user_id "
+        	           + "LEFT JOIN department d ON s.dept_id = d.dept_id "
+        	           + "ORDER BY s.shift_date ASC, s.start_time ASC";
+
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
