@@ -1,0 +1,44 @@
+.table-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-x: auto; /* Add horizontal scroll on small screens */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* Prevents text and buttons from wrapping */
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.action-buttons a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 5px;
+    color: white;
+    font-size: 14px;
+}
+
+.btn-approve {
+    background-color: #28a745; /* Green */
+}
+
+.btn-reject {
+    background-color: #dc3545; /* Red */
+}
+
+.status-submitted {
+    /* Future styling for status can go here */
+}

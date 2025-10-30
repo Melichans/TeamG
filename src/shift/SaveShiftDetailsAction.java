@@ -73,7 +73,7 @@ public class SaveShiftDetailsAction extends HttpServlet {
                 shift.setDeptId(deptId);
                 shift.setStartTime(startTime);
                 shift.setEndTime(endTime);
-                shift.setStatus("提出済み"); // Always set to submitted when user saves
+                shift.setStatus("下書き"); // Save as draft
                 shift.setMemo(memo); // Assuming ShiftBean has a memo field
 
                 shiftDAO.saveOrUpdateUserShift(shift);

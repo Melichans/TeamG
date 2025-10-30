@@ -45,6 +45,12 @@ public class EnterShiftsAction extends HttpServlet {
             LocalDate startDate = LocalDate.parse(startDateStr);
             LocalDate endDate = LocalDate.parse(endDateStr);
 
+            // First, revert any submitted shifts in this period back to drafts for editing
+            try (Connection conn = DBConnection.getConnection()) {
+                ShiftDAO dao = new ShiftDAO(conn);
+                dao.revertSubmittedShiftsToDrafts(userId, startDate, endDate);
+            }
+
             // DBからこの期間のシフト取得
             List<ShiftBean> existingShifts;
             try (Connection conn = DBConnection.getConnection()) {

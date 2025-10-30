@@ -99,17 +99,19 @@ public class ShiftDAO {
      * @throws SQLException
      */
     public void addOpenShift(ShiftBean shift) throws SQLException {
-        String sql = "INSERT INTO `shift` (dept_id, shift_date, start_time, end_time, status) VALUES (?, ?, ?, ?, ?)";
+        // Explicitly set user_id to NULL as it's an open shift everyone can apply to
+        String sql = "INSERT INTO `shift` (user_id, dept_id, shift_date, start_time, end_time, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, shift.getDeptId());
-            ps.setDate(2, shift.getShiftDate());
-            ps.setTime(3, shift.getStartTime());
-            ps.setTime(4, shift.getEndTime());
-            ps.setString(5, shift.getStatus()); // Should be '募集' for open shifts
+            ps.setNull(1, java.sql.Types.INTEGER); // user_id is NULL for open shifts
+            ps.setInt(2, shift.getDeptId());
+            ps.setDate(3, shift.getShiftDate());
+            ps.setTime(4, shift.getStartTime());
+            ps.setTime(5, shift.getEndTime());
+            ps.setString(6, shift.getStatus()); // Should be '募集' for open shifts
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("ShiftDAO.addShift エラー: " + e.getMessage(), e);
+            throw new SQLException("ShiftDAO.addOpenShift エラー: " + e.getMessage(), e);
         }
     }
 
@@ -177,6 +179,41 @@ public class ShiftDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("ShiftDAO.getShiftsByStatus エラー: " + e.getMessage(), e);
+        }
+        return list;
+    }
+
+    public List<ShiftBean> getShiftsByStatusForUser(int userId, String status) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
+        // This query is similar to getShiftsByStatus but also filters by user_id
+        String sql = "SELECT s.shift_id, s.user_id, u.name as user_name, s.dept_id, d.dept_name, s.shift_date, s.start_time, s.end_time, s.status " +
+                     "FROM `shift` s " +
+                     "JOIN `user` u ON s.user_id = u.user_id " +
+                     "JOIN `department` d ON s.dept_id = d.dept_id " +
+                     "WHERE s.user_id = ? AND s.status = ? " +
+                     "ORDER BY s.shift_date ASC, s.start_time ASC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setString(2, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ShiftBean s = new ShiftBean();
+                    s.setShiftId(rs.getInt("shift_id"));
+                    s.setUserId(rs.getInt("user_id"));
+                    s.setUserName(rs.getString("user_name"));
+                    s.setDeptId(rs.getInt("dept_id"));
+                    s.setDeptName(rs.getString("dept_name"));
+                    s.setShiftDate(rs.getDate("shift_date"));
+                    s.setStartTime(rs.getTime("start_time"));
+                    s.setEndTime(rs.getTime("end_time"));
+                    s.setStatus(rs.getString("status"));
+                    list.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.getShiftsByStatusForUser エラー: " + e.getMessage(), e);
         }
         return list;
     }
@@ -266,9 +303,11 @@ public class ShiftDAO {
 
     public List<ShiftBean> getShiftsByMonthAndStatus(int userId, int year, int month, String status) throws SQLException {
         List<ShiftBean> list = new ArrayList<>();
-        String sql = "SELECT shift_id, user_id, dept_id, shift_date, start_time, end_time, status, memo FROM `shift` " +
-                     "WHERE user_id = ? AND YEAR(shift_date) = ? AND MONTH(shift_date) = ? AND status = ? " +
-                     "ORDER BY shift_date ASC";
+        String sql = "SELECT s.shift_id, s.user_id, s.dept_id, d.dept_name, s.shift_date, s.start_time, s.end_time, s.status, s.memo " +
+                     "FROM `shift` s " +
+                     "LEFT JOIN `department` d ON s.dept_id = d.dept_id " +
+                     "WHERE s.user_id = ? AND YEAR(s.shift_date) = ? AND MONTH(s.shift_date) = ? AND s.status = ? " +
+                     "ORDER BY s.shift_date ASC";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -281,6 +320,7 @@ public class ShiftDAO {
                     s.setShiftId(rs.getInt("shift_id"));
                     s.setUserId(rs.getInt("user_id"));
                     s.setDeptId(rs.getInt("dept_id"));
+                    s.setDeptName(rs.getString("dept_name")); // Add this line
                     s.setShiftDate(rs.getDate("shift_date"));
                     s.setStartTime(rs.getTime("start_time"));
                     s.setEndTime(rs.getTime("end_time"));
@@ -324,6 +364,89 @@ public class ShiftDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("ShiftDAO.updateShiftStatus エラー: " + e.getMessage(), e);
+        }
+    }
+
+    public void revertSubmittedShiftsToDrafts(int userId, java.time.LocalDate startDate, java.time.LocalDate endDate) throws SQLException {
+        String sql = "UPDATE `shift` SET status = '下書き' WHERE user_id = ? AND status = '提出済み' AND shift_date BETWEEN ? AND ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setDate(2, java.sql.Date.valueOf(startDate));
+            ps.setDate(3, java.sql.Date.valueOf(endDate));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.revertSubmittedShiftsToDrafts エラー: " + e.getMessage(), e);
+        }
+    }
+
+
+    public void submitDraftsForPeriod(int userId, java.time.LocalDate startDate, java.time.LocalDate endDate) throws SQLException {
+        // Use a transaction to ensure both operations succeed or fail together
+        conn.setAutoCommit(false);
+        try {
+            // 1. Delete any previously submitted shifts for this user and period
+            String deleteSql = "DELETE FROM `shift` WHERE user_id = ? AND status = '提出済み' AND shift_date BETWEEN ? AND ?";
+            try (PreparedStatement deletePs = conn.prepareStatement(deleteSql)) {
+                deletePs.setInt(1, userId);
+                deletePs.setDate(2, java.sql.Date.valueOf(startDate));
+                deletePs.setDate(3, java.sql.Date.valueOf(endDate));
+                deletePs.executeUpdate();
+            }
+
+            // 2. Update all draft shifts for this user and period to 'submitted'
+            String updateSql = "UPDATE `shift` SET status = '提出済み' WHERE user_id = ? AND status = '下書き' AND shift_date BETWEEN ? AND ?";
+            try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+                updatePs.setInt(1, userId);
+                updatePs.setDate(2, java.sql.Date.valueOf(startDate));
+                updatePs.setDate(3, java.sql.Date.valueOf(endDate));
+                updatePs.executeUpdate();
+            }
+
+            // If both operations are successful, commit the transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            // If any error occurs, roll back the transaction
+            conn.rollback();
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.submitDraftsForPeriod エラー: " + e.getMessage(), e);
+        } finally {
+            // Restore default auto-commit behavior
+            conn.setAutoCommit(true);
+        }
+    }
+
+    public void updateStatusForMultipleShifts(String[] shiftIds, String newStatus) throws SQLException {
+        if (shiftIds == null || shiftIds.length == 0) {
+            return; // Nothing to update
+        }
+
+        // Build the SQL with placeholders for the IN clause
+        StringBuilder sql = new StringBuilder("UPDATE `shift` SET status = ? WHERE shift_id IN (");
+        for (int i = 0; i < shiftIds.length; i++) {
+            sql.append("?");
+            if (i < shiftIds.length - 1) {
+                sql.append(",");
+            }
+        }
+        sql.append(")");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            // Set the new status
+            ps.setString(1, newStatus);
+
+            // Set the shift IDs
+            for (int i = 0; i < shiftIds.length; i++) {
+                ps.setInt(i + 2, Integer.parseInt(shiftIds[i]));
+            }
+
+            ps.executeUpdate();
+        } catch (NumberFormatException e) {
+            throw new SQLException("Invalid shift ID format.", e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.updateStatusForMultipleShifts エラー: " + e.getMessage(), e);
         }
     }
 }

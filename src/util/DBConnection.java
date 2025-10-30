@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DBConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/shift_ai_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Tokyo&allowPublicKeyRetrieval=true&useSSL=false";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; // Mật khẩu MySQL của bạn
+    private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
         try {

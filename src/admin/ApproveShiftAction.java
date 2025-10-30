@@ -45,7 +45,7 @@ public class ApproveShiftAction extends HttpServlet {
             int shiftId = Integer.parseInt(shiftIdStr);
             try (Connection conn = DBConnection.getConnection()) {
                 ShiftDAO shiftDAO = new ShiftDAO(conn);
-                shiftDAO.updateShiftStatus(shiftId, "確認済み");
+                shiftDAO.updateShiftStatus(shiftId, "承認済み");
                 // Optionally set a success message
                 session.setAttribute("adminMessage", "シフトを承認しました。");
             }

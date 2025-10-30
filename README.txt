@@ -126,3 +126,33 @@ This file records the changes made by the Gemini AI assistant.
         - Sửa lỗi biên dịch `ShiftBean` và `DepartmentBean` trong `WebContent/addshift/enter_shifts.jsp`.
         - Sửa lỗi logic truyền tham số `startDate`/`endDate` từ `src/shift/EditDayAction.java` đến `WebContent/addshift/edit_day.jsp` và ngược lại.
         - Thêm mã debug vào `src/shift/EditDayAction.java` để chẩn đoán lỗi `勤務日null`.
+
+- 2025-10-30: **UI Improvement for Admin Submitted Shifts Page:**
+    - Created `WebContent/admin/css/submitted_shifts.css` to modularize styling.
+    - Modified `WebContent/admin/submitted_shifts.jsp` to remove inline styles and link to the new external stylesheet, fixing text wrapping issues.
+
+- 2025-10-30: **Fix: Department Name Display on User Homepage Calendar:**
+    - Modified `src/dao/ShiftDAO.java` (`getShiftsByMonthAndStatus` method) to correctly `LEFT JOIN` the `department` table and fetch `dept_name`, resolving the "未設定" display issue.
+
+- 2025-10-30: **Feature: Enhanced User Shift Submission & Re-submission Workflow ("Submit All"):**
+    - **Database Schema Update:** Instructed user to run `ALTER TABLE shift MODIFY status ENUM('未提出','提出済み','確認済み','拒否','募集','下書き','承認済み') DEFAULT '未提出';` to add `下書き` (Draft) and `承認済み` (Approved) statuses.
+    - **`src/shift/SaveShiftDetailsAction.java`:** Modified to save individual shift edits as `下書き` (Draft) instead of `提出済み`.
+    - **`WebContent/addshift/enter_shifts.jsp`:** Replaced the "Complete Shift Submission" link with a new form and button to "Submit All Shifts for this Period".
+    - **`src/shift/SubmitPeriodAction.java`:** Created a new servlet to handle the "Submit All" action. This action processes the entire period's shifts.
+    - **`src/dao/ShiftDAO.java`:** Added `submitDraftsForPeriod` method (deletes old submissions, promotes drafts).
+    - **`src/shift/EnterShiftsAction.java`:** Modified to call `revertSubmittedShiftsToDrafts` at the start of the `doGet` method. This ensures that when a user re-enters an already submitted period for editing, all previously `提出済み` shifts for that period are converted back to `下書き`, allowing for seamless re-submission without data loss.
+    - **`src/dao/ShiftDAO.java`:** Added `revertSubmittedShiftsToDrafts` method to change `提出済み` shifts back to `下書き`.
+
+- 2025-10-30: **Feature: Manager Approval & User Confirmation Workflow:**
+    - **`src/admin/ApproveShiftAction.java`:** Modified to set shift status to `承認済み` (Approved by Manager) instead of `確認済み` when a manager approves a shift.
+    - **`WebContent/shift/process_list.jsp`:** Created a new menu page for "処理一覧" (Process List), containing a link to "シフト確認" (Shift Confirmation).
+    - **Navigation Links:** Updated "処理一覧" links in `WebContent/menu/menu.jsp`, `WebContent/mypage/my_page.jsp`, and `WebContent/password_change/password_change.jsp` to point to `process_list.jsp`.
+    - **`src/shift/ListForConfirmationAction.java`:** Created a new servlet to fetch shifts with `承認済み` status for the logged-in user.
+    - **`src/dao/ShiftDAO.java`:** Added `getShiftsByStatusForUser` method to fetch shifts by user and status.
+    - **`WebContent/shift/shift_confirmation_list.jsp`:** Created a new JSP to display `承認済み` shifts in a table with checkboxes and a "Confirm" button.
+    - **`src/shift/ConfirmShiftsAction.java`:** Created a new servlet to handle the confirmation of selected shifts.
+    - **`src/dao/ShiftDAO.java`:** Added `updateStatusForMultipleShifts` method to update the status of multiple shifts to `確認済み` (Confirmed by User).
+
+- 2025-10-30: **Improvement: Robustness for Admin "Add Urgent Shift" Functionality:**
+    - Modified `src/dao/ShiftDAO.java` (`addOpenShift` method) to explicitly include `user_id` in the `INSERT` statement and set it to `NULL`, ensuring clarity and data integrity for open shifts.
+

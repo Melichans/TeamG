@@ -174,7 +174,13 @@
             <% } %>
 
             <div class="finalize-submission">
-                <a href="${pageContext.request.contextPath}/home/user_home.jsp" class="btn-submit-finalize">シフト提出を完了する</a>
+                <form action="${pageContext.request.contextPath}/shift/SubmitPeriodAction" method="post" onsubmit="return confirm('この期間のシフトを提出します。よろしいですか？');">
+                    <input type="hidden" name="periodStartDate" value="<%= request.getAttribute("periodStartDate") %>">
+                    <input type="hidden" name="periodEndDate" value="<%= request.getAttribute("periodEndDate") %>">
+                    <button type="submit" class="btn-submit-finalize">
+                        <i class="fa-solid fa-paper-plane"></i> この内容でシフトを提出する
+                    </button>
+                </form>
             </div>
         </main>
 

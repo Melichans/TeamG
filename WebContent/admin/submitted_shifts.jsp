@@ -7,40 +7,7 @@
     <title>シフト申請の管理</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/home/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        .table-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .action-buttons a {
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-right: 5px;
-            color: white;
-            font-size: 14px;
-        }
-        .btn-approve {
-            background-color: #28a745; /* Green */
-        }
-        .btn-reject {
-            background-color: #dc3545; /* Red */
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/submitted_shifts.css">
 </head>
 <body>
     <div class="container">
