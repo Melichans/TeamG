@@ -149,18 +149,32 @@ public class ShiftDAO {
         return list;
     }
 
-
     public List<ShiftBean> getShiftsByStatus(String status) throws SQLException {
-        List<ShiftBean> list = new ArrayList<>();
-        String sql = "SELECT s.shift_id, s.user_id, u.name as user_name, s.dept_id, d.dept_name, s.shift_date, s.start_time, s.end_time, s.status " +
-                     "FROM `shift` s " +
-                     "JOIN `user` u ON s.user_id = u.user_id " +
-                     "JOIN `department` d ON s.dept_id = d.dept_id " +
-                     "WHERE s.status = ? " +
-                     "ORDER BY s.shift_date ASC, s.start_time ASC";
+        return getShiftsByStatus(status, null); // Call the new method with null userId
+    }
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    public List<ShiftBean> getShiftsByStatus(String status, Integer userId) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT s.shift_id, s.user_id, u.name as user_name, s.dept_id, d.dept_name, " +
+            "s.shift_date, s.start_time, s.end_time, s.status " +
+            "FROM `shift` s " +
+            "JOIN `user` u ON s.user_id = u.user_id " +
+            "JOIN `department` d ON s.dept_id = d.dept_id " +
+            "WHERE s.status = ? ");
+
+        if (userId != null) {
+            sql.append("AND s.user_id = ? ");
+        }
+
+        sql.append("ORDER BY s.shift_date ASC, s.start_time ASC");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             ps.setString(1, status);
+            if (userId != null) {
+                ps.setInt(2, userId);
+            }
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ShiftBean s = new ShiftBean();
@@ -214,6 +228,57 @@ public class ShiftDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("ShiftDAO.getShiftsByStatusForUser エラー: " + e.getMessage(), e);
+        }
+        return list;
+    }
+
+    public List<ShiftBean> getShiftsByStatusForUser(int userId, java.util.List<String> statuses) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
+        if (statuses == null || statuses.isEmpty()) {
+            return list;
+        }
+
+        StringBuilder sql = new StringBuilder(
+            "SELECT s.shift_id, s.user_id, u.name as user_name, s.dept_id, d.dept_name, " +
+            "s.shift_date, s.start_time, s.end_time, s.status, s.memo " +
+            "FROM `shift` s " +
+            "JOIN `user` u ON s.user_id = u.user_id " +
+            "JOIN `department` d ON s.dept_id = d.dept_id " +
+            "WHERE s.user_id = ? AND s.status IN (");
+
+        for (int i = 0; i < statuses.size(); i++) {
+            sql.append("?");
+            if (i < statuses.size() - 1) {
+                sql.append(",");
+            }
+        }
+        sql.append(") ORDER BY s.shift_date ASC, s.start_time ASC");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setInt(1, userId);
+            for (int i = 0; i < statuses.size(); i++) {
+                ps.setString(i + 2, statuses.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ShiftBean s = new ShiftBean();
+                    s.setShiftId(rs.getInt("shift_id"));
+                    s.setUserId(rs.getInt("user_id"));
+                    s.setUserName(rs.getString("user_name"));
+                    s.setDeptId(rs.getInt("dept_id"));
+                    s.setDeptName(rs.getString("dept_name"));
+                    s.setShiftDate(rs.getDate("shift_date"));
+                    s.setStartTime(rs.getTime("start_time"));
+                    s.setEndTime(rs.getTime("end_time"));
+                    s.setStatus(rs.getString("status"));
+                    s.setMemo(rs.getString("memo"));
+                    list.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.getShiftsByStatusForUser (List) エラー: " + e.getMessage(), e);
         }
         return list;
     }
@@ -447,6 +512,103 @@ public class ShiftDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("ShiftDAO.updateStatusForMultipleShifts エラー: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 管理者が修正するために、すべての管理可能なシフトを取得します。
+     * （ステータスが「提出済み」「承認済み」「確認済み」のシフト）
+     * @return 管理可能なシフトのリスト
+     * @throws SQLException
+     */
+    public List<ShiftBean> getAllManageableShifts() throws SQLException {
+        return getAllManageableShifts(null); // Call the new method with null userId
+    }
+
+    /**
+     * 管理者が修正するために、すべての管理可能なシフトを取得します。
+     * （ステータスが「提出済み」「承認済み」「確認済み」のシフト）
+     * @param userId ユーザーIDでフィルタリングする場合、そのID。フィルタリングしない場合はnull。
+     * @return 管理可能なシフトのリスト
+     * @throws SQLException
+     */
+    public List<ShiftBean> getAllManageableShifts(Integer userId) throws SQLException {
+        List<ShiftBean> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT s.shift_id, s.user_id, u.name as user_name, s.dept_id, d.dept_name, " +
+            "s.shift_date, s.start_time, s.end_time, s.status " +
+            "FROM `shift` s " +
+            "LEFT JOIN `user` u ON s.user_id = u.user_id " +
+            "LEFT JOIN `department` d ON s.dept_id = d.dept_id " +
+            "WHERE s.status IN ('提出済み', '承認済み', '確認済み') AND s.user_id IS NOT NULL ");
+
+        if (userId != null) {
+            sql.append("AND s.user_id = ? ");
+        }
+
+        sql.append("ORDER BY s.shift_date DESC, s.start_time ASC");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            if (userId != null) {
+                ps.setInt(1, userId);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ShiftBean s = new ShiftBean();
+                    s.setShiftId(rs.getInt("shift_id"));
+                    s.setUserId(rs.getInt("user_id"));
+                    s.setUserName(rs.getString("user_name"));
+                    s.setDeptId(rs.getInt("dept_id"));
+                    s.setDeptName(rs.getString("dept_name"));
+                    s.setShiftDate(rs.getDate("shift_date"));
+                    s.setStartTime(rs.getTime("start_time"));
+                    s.setEndTime(rs.getTime("end_time"));
+                    s.setStatus(rs.getString("status"));
+                    list.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.getAllManageableShifts エラー: " + e.getMessage(), e);
+        }
+        return list;
+    }
+
+    /**
+     * 指定されたIDのシフトを削除します。
+     * @param shiftId 削除するシフトのID
+     * @throws SQLException
+     */
+    public void deleteShiftById(int shiftId) throws SQLException {
+        String sql = "DELETE FROM `shift` WHERE shift_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, shiftId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.deleteShiftById エラー: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 管理者がユーザーのために新しいシフトを追加します。ステータスは「修正依頼」になります。
+     * @param shift 追加するシフト情報
+     * @throws SQLException
+     */
+    public void addAdminInitiatedShift(ShiftBean shift) throws SQLException {
+        String sql = "INSERT INTO `shift` (user_id, dept_id, shift_date, start_time, end_time, status, memo) VALUES (?, ?, ?, ?, ?, '修正依頼', ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, shift.getUserId());
+            ps.setInt(2, shift.getDeptId());
+            ps.setDate(3, shift.getShiftDate());
+            ps.setTime(4, shift.getStartTime());
+            ps.setTime(5, shift.getEndTime());
+            ps.setString(6, shift.getMemo());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("ShiftDAO.addAdminInitiatedShift エラー: " + e.getMessage(), e);
         }
     }
 }

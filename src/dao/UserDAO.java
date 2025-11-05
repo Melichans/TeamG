@@ -101,4 +101,23 @@ public class UserDAO {
         }
         return user;
     }
+
+    public java.util.List<UserBean> getAllUsers() throws SQLException {
+        java.util.List<UserBean> users = new java.util.ArrayList<>();
+        String sql = "SELECT user_id, name FROM user ORDER BY name";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    UserBean user = new UserBean();
+                    user.setUserId(rs.getInt("user_id"));
+                    user.setName(rs.getString("name"));
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error getting all users: " + e.getMessage(), e);
+        }
+        return users;
+    }
 }

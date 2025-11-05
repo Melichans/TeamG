@@ -36,14 +36,19 @@ public class ListForConfirmationAction extends HttpServlet {
         try (Connection conn = DBConnection.getConnection()) {
             ShiftDAO shiftDAO = new ShiftDAO(conn);
             
-            // Get shifts with 'Approved' status for the current user
-            List<ShiftBean> confirmationList = shiftDAO.getShiftsByStatusForUser(userId, "承認済み");
+            // Create a list of statuses to fetch
+            List<String> statusesToFetch = new java.util.ArrayList<>();
+            statusesToFetch.add("承認済み");
+            statusesToFetch.add("修正依頼");
+
+            // Get shifts with 'Approved' or 'Modification Request' status for the current user
+            List<ShiftBean> confirmationList = shiftDAO.getShiftsByStatusForUser(userId, statusesToFetch);
             
             request.setAttribute("confirmationList", confirmationList);
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "承認済みシフトのリスト取得中にエラーが発生しました: " + e.getMessage());
+            request.setAttribute("error", "確認待ちシフトのリスト取得中にエラーが発生しました: " + e.getMessage());
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(forwardPath);

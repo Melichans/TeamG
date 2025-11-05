@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.sql.Connection; // Explicitly add this import
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -79,11 +80,11 @@ public class AddUrgentShiftAction extends HttpServlet {
                 request.getRequestDispatcher("/admin/add_urgent_shift.jsp").forward(request, response);
             }
 
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("error", "日付または時間の形式が不正です。");
-            request.getRequestDispatcher("/admin/add_urgent_shift.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "部署IDの形式が不正です。");
+            request.getRequestDispatcher("/admin/add_urgent_shift.jsp").forward(request, response);
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", "日付または時間の形式が不正です。");
             request.getRequestDispatcher("/admin/add_urgent_shift.jsp").forward(request, response);
         }
     }

@@ -7,7 +7,7 @@ This file records the changes made by the Gemini AI assistant.
 - 2025-10-21: Created this README.txt file to track project modifications.
 - 2025-10-21: Modified `UserBean.java` to include `username` and `roleName` fields.
 - 2025-10-21: Fixed database schema mismatch in `UserListServlet.java` and updated `users.jsp` to display correct user information.
-- 2025-10-21: Removed broken links to `department_list.jsp` from `admin_home.jsp` and `developer_home.jsp`.
+- 2025-10-21: Removed broken links to `department_list.jsp` from `admin_home.jsp` and `developer_home.jsp`
 - 2025-10-21: Addressed role handling inconsistency by setting `role` in session in `LoginExecuteAction.java` and updating role checks in `HomeAdminAction.java`, `HomeDeveloperAction.java`, and `HomeUserAction.java`.
 - 2025-10-21: Removed the 'Forgot password' link from `login.jsp` as per user's request.
 - 2025-10-21: Created `src/shift_manager/OpenShiftsAction.java` to display open shifts.
@@ -119,9 +119,9 @@ This file records the changes made by the Gemini AI assistant.
         - Cập nhật `src/bean/ShiftBean.java` để thêm trường `memo`.
         - Cập nhật `src/dao/ShiftDAO.java` với các phương thức `deleteUserShift` và `saveOrUpdateUserShift`.
         - Cập nhật `WebContent/addshift/edit_day.jsp` để biểu mẫu trỏ đến `SaveShiftDetailsAction` và truyền các tham số cần thiết.
-        - Cập nhật `src/shift/EnterShiftsAction.java` để lấy các ca làm việc đã lưu của người dùng và truyền đến `enter_shifts.jsp`.
+        - Cập nhật `src/shift/EnterShiftsAction.java` để lấy các ca làm việc đã lưu của người dùng và truyền đến `enter_shifts.jsp`
         - Cập nhật `WebContent/addshift/enter_shifts.jsp` để hiển thị thời gian đã lưu bên cạnh mỗi ngày.
-    - **Sửa lỗi và Debug:**
+    - **Sửa lỗi và Refactor:**
         - Sửa lỗi biên dịch `HttpSession` trong `src/shift/EnterShiftsAction.java`.
         - Sửa lỗi biên dịch `ShiftBean` và `DepartmentBean` trong `WebContent/addshift/enter_shifts.jsp`.
         - Sửa lỗi logic truyền tham số `startDate`/`endDate` từ `src/shift/EditDayAction.java` đến `WebContent/addshift/edit_day.jsp` và ngược lại.
@@ -156,3 +156,34 @@ This file records the changes made by the Gemini AI assistant.
 - 2025-10-30: **Improvement: Robustness for Admin "Add Urgent Shift" Functionality:**
     - Modified `src/dao/ShiftDAO.java` (`addOpenShift` method) to explicitly include `user_id` in the `INSERT` statement and set it to `NULL`, ensuring clarity and data integrity for open shifts.
 
+- 2025-11-05: **Feature: Admin Shift Management & Correction:**
+    - Renamed "シフト提出確認" to "シフト管理" in `admin_home.jsp`.
+    - Created `WebContent/admin/shift_management_menu.jsp` with links for "シフト提出" and "シフト修正".
+    - **Shift Correction ("シフト修正") Sub-feature:**
+        - Implemented `src/admin/ListAllShiftsAction.java` to display all manageable shifts.
+        - Added `ShiftDAO.getAllManageableShifts(Integer userId)` to filter shifts.
+        - Created `WebContent/admin/shift_correction.jsp` to list shifts with delete option and add new shift form.
+        - Implemented `src/admin/DeleteShiftAction.java` and `ShiftDAO.deleteShiftById(int shiftId)` for shift deletion.
+        - Implemented `src/admin/AdminAddShiftAction.java` to prepare data for adding new shifts.
+        - Added `UserDAO.getAllUsers()` to fetch all users for dropdowns.
+        - Created `WebContent/admin/admin_add_shift.jsp` for admin to add new shifts.
+        - Instructed user to add '修正依頼' status to `shift` table enum.
+        - Implemented `src/admin/AdminAddShiftExecuteAction.java` and `ShiftDAO.addAdminInitiatedShift(ShiftBean shift)` to save admin-added shifts with '修正依頼' status.
+        - Updated `src/shift/ListForConfirmationAction.java` to include '修正依頼' shifts for user confirmation.
+    - **User Filter for Admin Shift Views:**
+        - Added user filter dropdown to `WebContent/admin/shift_correction.jsp` and `WebContent/admin/submitted_shifts.jsp`.
+        - Modified `src/admin/ListAllShiftsAction.java` and `src/admin/ListSubmittedShiftsAction.java` to handle user filtering.
+        - Overloaded `ShiftDAO.getShiftsByStatus(String status, Integer userId)` to support user filtering.
+    - **Bug Fixes & Refinements:**
+        - Fixed missing imports/package declarations in `src/admin/ListAllShiftsAction.java` and `src/admin/ListSubmittedShiftsAction.java`.
+        - Fixed "unreachable catch block" error in `src/admin/AddUrgentShiftAction.java` by reordering `catch` blocks.
+        - Fixed JSP compilation error in `WebContent/admin/shift_correction.jsp` by correcting JSP directive placement and a stray character.
+        - Improved error display in `WebContent/admin/shift_correction.jsp` by showing specific error messages.
+
+- 2025-11-05: **Feature: User Emergency Shift Application (掲示板) Fixes:**
+    - Refactored `src/shift_manager/ApplyShiftExecuteAction.java` to use the Post-Redirect-Get (PRG) pattern for robust form submission handling.
+    - Updated `WebContent/shift_manager/open_shifts.jsp` to correctly display error/success messages passed via URL parameters.
+
+- 2025-11-05: **Feature: Admin Reject Shift Functionality:**
+    - Implemented `src/admin/RejectShiftAction.java` to handle rejecting submitted shifts.
+    - Updated `WebContent/admin/submitted_shifts.jsp` to include a functional "拒否" (Reject) button with confirmation.

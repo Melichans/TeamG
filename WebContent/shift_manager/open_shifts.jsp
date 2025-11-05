@@ -77,9 +77,9 @@
         </header>
 
         <main>
-            <% if (request.getAttribute("error") != null) { %>
+            <% if (request.getParameter("error") != null) { %>
                 <div class="message-box error">
-                    <%= request.getAttribute("error") %>
+                    <%= request.getParameter("error") %>
                 </div>
             <% } %>
             <% if (request.getParameter("message") != null) { %>
